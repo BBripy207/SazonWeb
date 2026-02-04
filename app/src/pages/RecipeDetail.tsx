@@ -1,5 +1,6 @@
 import { Clock, Users, BookMarked, Star } from 'lucide-react';
 import logo from '../assets/images/sasonweblogo.png';
+import mostachon from '../assets/images/mostachon.png';
 import Button from '../components/ui/Button';
 import Box from '../components/ui/Box';
 import Text from '../components/ui/Text';
@@ -13,7 +14,7 @@ import { colors, spacing, fontSize, fontWeight, borderRadius } from '../styles/t
 const mockRecipe = {
     id: '1',
     title: 'Mostachones',
-    image: logo,
+    image: mostachon,
     time: 30,
     difficulty: 'Fácil',
     category: 'Postres',

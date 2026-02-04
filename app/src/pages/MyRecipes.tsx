@@ -6,14 +6,16 @@ import Box from '../components/ui/Box';
 import Heading from '../components/ui/Heading';
 import Section from '../components/ui/Section';
 import { History, Heart } from 'lucide-react';
-import logo from '../assets/images/sasonweblogo.png';
+import mostachon from '../assets/images/mostachon.png';
+import costillas from '../assets/images/costillas bbq.png';
+import pizza from '../assets/images/pizza italiana.png';
 import { colors, spacing, fontSize, fontWeight } from '../styles/theme';
 
 const mockSaved = [
     {
         id: '1',
         title: 'Mostachones',
-        image: logo,
+        image: mostachon,
         time: 30,
         difficulty: 'Fácil' as const,
         category: 'Postres',
@@ -24,7 +26,7 @@ const mockSaved = [
     {
         id: '4',
         title: 'Pizza Italiana',
-        image: logo,
+        image: pizza,
         time: 60,
         difficulty: 'Media' as const,
         category: 'Internacional',
@@ -38,7 +40,7 @@ const mockRecent = [
     {
         id: '3',
         title: 'Costillas BBQ',
-        image: logo,
+        image: costillas,
         time: 120,
         difficulty: 'Difícil' as const,
         category: 'Comida Casera',

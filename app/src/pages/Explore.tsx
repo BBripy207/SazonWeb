@@ -6,14 +6,17 @@ import Grid from '../components/layout/Grid';
 import Box from '../components/ui/Box';
 import Heading from '../components/ui/Heading';
 import { Filter } from 'lucide-react';
-import logo from '../assets/images/sasonweblogo.png';
+import mostachon from '../assets/images/mostachon.png';
+import enchiladas from '../assets/images/enchiladas_suizas_.png';
+import costillas from '../assets/images/costillas bbq.png';
+import pizza from '../assets/images/pizza italiana.png';
 import { colors, spacing, fontSize, fontWeight } from '../styles/theme';
 
 const mockRecipes = [
     {
         id: '1',
         title: 'Mostachones',
-        image: logo,
+        image: mostachon,
         time: 30,
         difficulty: 'Fácil' as const,
         category: 'Postres',
@@ -24,7 +27,7 @@ const mockRecipes = [
     {
         id: '2',
         title: 'Enchiladas Suizas',
-        image: logo,
+        image: enchiladas,
         time: 45,
         difficulty: 'Media' as const,
         category: 'Comida Casera',
@@ -35,7 +38,7 @@ const mockRecipes = [
     {
         id: '3',
         title: 'Costillas BBQ',
-        image: logo,
+        image: costillas,
         time: 120,
         difficulty: 'Difícil' as const,
         category: 'Comida Casera',
@@ -46,7 +49,7 @@ const mockRecipes = [
     {
         id: '4',
         title: 'Pizza Italiana',
-        image: logo,
+        image: pizza,
         time: 60,
         difficulty: 'Media' as const,
         category: 'Internacional',
