@@ -1,12 +1,14 @@
+import Box from './ui/Box';
+import Text from './ui/Text';
 import { colors, spacing } from '../styles/theme';
 
 export default function Footer() {
     return (
-        <footer style={styles.footer}>
-            <div style={styles.container}>
-                <p style={styles.text}>© 2026 SazonWeb - Recetas Estandarizadas</p>
-            </div>
-        </footer>
+        <Box as="footer" style={styles.footer}>
+            <Box style={styles.container}>
+                <Text style={styles.text}>© 2026 SazonWeb - Recetas Estandarizadas</Text>
+            </Box>
+        </Box>
     );
 }
 

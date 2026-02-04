@@ -1,6 +1,10 @@
 import SearchBar from '../components/SearchBar';
 import RecipeCard from '../components/RecipeCard';
 import Container from '../components/layout/Container';
+import Box from '../components/ui/Box';
+import Text from '../components/ui/Text';
+import Heading from '../components/ui/Heading';
+import Section from '../components/ui/Section';
 import { ChefHat, Clock, Heart } from 'lucide-react';
 import logo from '../assets/images/sasonweblogo.png';
 import { colors, spacing, fontSize, fontWeight, borderRadius } from '../styles/theme';
@@ -50,32 +54,32 @@ const mockRecipes = [
 export default function Home() {
     return (
         <Container>
-            <section style={styles.hero}>
-                <h1 style={styles.title}>Encuentra tu receta perfecta</h1>
-                <p style={styles.subtitle}>Medidas estandarizadas para resultados consistentes</p>
+            <Section style={styles.hero}>
+                <Heading level={1} style={styles.title}>Encuentra tu receta perfecta</Heading>
+                <Text style={styles.subtitle}>Medidas estandarizadas para resultados consistentes</Text>
                 <SearchBar />
-            </section>
+            </Section>
 
-            <section style={styles.section}>
-                <h2 style={styles.sectionTitle}>Categorías</h2>
-                <div style={styles.categories}>
+            <Section style={styles.section}>
+                <Heading level={2} style={styles.sectionTitle}>Categorías</Heading>
+                <Box style={styles.categories}>
                     {categories.map((cat) => (
-                        <div key={cat.name} style={styles.category}>
+                        <Box key={cat.name} style={styles.category}>
                             <cat.icon size={32} />
-                            <span>{cat.name}</span>
-                        </div>
+                            <Text as="span">{cat.name}</Text>
+                        </Box>
                     ))}
-                </div>
-            </section>
+                </Box>
+            </Section>
 
-            <section style={styles.section}>
-                <h2 style={styles.sectionTitle}>Vistos Recientemente</h2>
-                <div style={styles.grid}>
+            <Section style={styles.section}>
+                <Heading level={2} style={styles.sectionTitle}>Vistos Recientemente</Heading>
+                <Box style={styles.grid}>
                     {mockRecipes.map((recipe) => (
                         <RecipeCard key={recipe.id} recipe={recipe} />
                     ))}
-                </div>
-            </section>
+                </Box>
+            </Section>
         </Container>
     );
 }

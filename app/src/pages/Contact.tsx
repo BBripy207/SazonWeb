@@ -1,6 +1,10 @@
 import { Phone } from 'lucide-react';
 import Container from '../components/layout/Container';
 import PageTitle from '../components/layout/PageTitle';
+import Box from '../components/ui/Box';
+import Text from '../components/ui/Text';
+import Heading from '../components/ui/Heading';
+import Section from '../components/ui/Section';
 import { colors, spacing, fontSize, fontWeight, borderRadius } from '../styles/theme';
 
 const contacts = [
@@ -15,41 +19,41 @@ export default function Contact() {
         <Container maxWidth="1000px">
             <PageTitle>Contacto</PageTitle>
 
-            <section style={styles.section}>
-                <h2 style={styles.subtitle}>Sobre Nosotros</h2>
-                <p style={styles.text}>
+            <Section style={styles.section}>
+                <Heading level={2} style={styles.subtitle}>Sobre Nosotros</Heading>
+                <Text style={styles.text}>
                     SazonWeb es tu plataforma de recetas con medidas estandarizadas.
                     Nuestro objetivo es eliminar la confusión de medidas mixtas y garantizar
                     que tus recetas siempre salgan perfectas.
-                </p>
-                <p style={styles.text}>
+                </Text>
+                <Text style={styles.text}>
                     Todas nuestras recetas utilizan el sistema métrico decimal para mayor
                     precisión y consistencia en tus preparaciones.
-                </p>
-            </section>
+                </Text>
+            </Section>
 
-            <section style={styles.section}>
-                <h2 style={styles.subtitle}>Contacta con nuestro equipo</h2>
-                <div style={styles.contacts}>
+            <Section style={styles.section}>
+                <Heading level={2} style={styles.subtitle}>Contacta con nuestro equipo</Heading>
+                <Box style={styles.contacts}>
                     {contacts.map((contact) => (
-                        <div key={contact.phone} style={styles.card}>
-                            <strong style={styles.name}>{contact.name}</strong>
-                            <a href={`tel:${contact.phone.replace(/\s/g, '')}`} style={styles.link}>
+                        <Box key={contact.phone} style={styles.card}>
+                            <Text as="strong" style={styles.name}>{contact.name}</Text>
+                            <Box style={styles.link}>
                                 <Phone size={18} />
                                 {contact.phone}
-                            </a>
-                        </div>
+                            </Box>
+                        </Box>
                     ))}
-                </div>
-            </section>
+                </Box>
+            </Section>
 
-            <section style={styles.section}>
-                <h2 style={styles.subtitle}>Soporte</h2>
-                <p style={styles.text}>
+            <Section style={styles.section}>
+                <Heading level={2} style={styles.subtitle}>Soporte</Heading>
+                <Text style={styles.text}>
                     Para dudas sobre medidas, sugerencias o reportar problemas,
                     no dudes en contactarnos.
-                </p>
-            </section>
+                </Text>
+            </Section>
         </Container>
     );
 }

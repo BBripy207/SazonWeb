@@ -1,6 +1,13 @@
 import { Clock, Users, BookMarked, Star } from 'lucide-react';
 import logo from '../assets/images/sasonweblogo.png';
 import Button from '../components/ui/Button';
+import Box from '../components/ui/Box';
+import Text from '../components/ui/Text';
+import Heading from '../components/ui/Heading';
+import Image from '../components/ui/Image';
+import List from '../components/ui/List';
+import ListItem from '../components/ui/ListItem';
+import Section from '../components/ui/Section';
 import { colors, spacing, fontSize, fontWeight, borderRadius } from '../styles/theme';
 
 const mockRecipe = {
@@ -49,83 +56,83 @@ const mockComments = [
 
 export default function RecipeDetail() {
     return (
-        <div style={styles.page}>
-            <div style={styles.hero}>
-                <img src={mockRecipe.image} alt={mockRecipe.title} style={styles.heroImage} />
-                <div style={styles.heroOverlay}>
-                    <h1 style={styles.title}>{mockRecipe.title}</h1>
-                    <div style={styles.meta}>
-                        <span style={styles.metaItem}>
+        <Box style={styles.page}>
+            <Box style={styles.hero}>
+                <Image src={mockRecipe.image} alt={mockRecipe.title} style={styles.heroImage} />
+                <Box style={styles.heroOverlay}>
+                    <Heading level={1} style={styles.title}>{mockRecipe.title}</Heading>
+                    <Box style={styles.meta}>
+                        <Text as="span" style={styles.metaItem}>
                             <Clock size={18} />
                             {mockRecipe.time} min
-                        </span>
-                        <span style={styles.metaItem}>
+                        </Text>
+                        <Text as="span" style={styles.metaItem}>
                             <Users size={18} />
                             {mockRecipe.servings} porciones
-                        </span>
-                        <span style={styles.badge}>{mockRecipe.difficulty}</span>
-                    </div>
-                </div>
-            </div>
+                        </Text>
+                        <Text as="span" style={styles.badge}>{mockRecipe.difficulty}</Text>
+                    </Box>
+                </Box>
+            </Box>
 
-            <div style={styles.content}>
-                <div style={styles.main}>
-                    <section style={styles.section}>
-                        <div style={styles.sectionHeader}>
-                            <h2 style={styles.sectionTitle}>Ingredientes</h2>
+            <Box style={styles.content}>
+                <Box style={styles.main}>
+                    <Section style={styles.section}>
+                        <Box style={styles.sectionHeader}>
+                            <Heading level={2} style={styles.sectionTitle}>Ingredientes</Heading>
                             <Button onClick={() => { }}>
                                 <BookMarked size={20} />
                                 Guardar
                             </Button>
-                        </div>
-                        <ul style={styles.ingredientsList}>
+                        </Box>
+                        <List style={styles.ingredientsList}>
                             {mockRecipe.ingredients.map((ing, i) => (
-                                <li key={i} style={styles.ingredient}>
-                                    <span>{ing.name}</span>
-                                    <span style={styles.amount}>
+                                <ListItem key={i} style={styles.ingredient}>
+                                    <Text as="span">{ing.name}</Text>
+                                    <Text as="span" style={styles.amount}>
                                         {ing.amount} {ing.unit}
-                                    </span>
-                                </li>
+                                    </Text>
+                                </ListItem>
                             ))}
-                        </ul>
-                    </section>
+                        </List>
+                    </Section>
 
-                    <section style={styles.section}>
-                        <h2 style={styles.sectionTitle}>Instrucciones</h2>
-                        <ol style={styles.instructionsList}>
+                    <Section style={styles.section}>
+                        <Heading level={2} style={styles.sectionTitle}>Instrucciones</Heading>
+                        <List ordered style={styles.instructionsList}>
                             {mockRecipe.instructions.map((step, i) => (
-                                <li key={i} style={styles.instruction}>
+                                <ListItem key={i} style={styles.instruction}>
                                     {step}
-                                </li>
+                                </ListItem>
                             ))}
-                        </ol>
-                    </section>
+                        </List>
+                    </Section>
 
-                    <section style={styles.section}>
-                        <h2 style={styles.sectionTitle}>Comentarios y Fotos</h2>
-                        <div style={styles.comments}>
+                    <Section style={styles.section}>
+                        <Heading level={2} style={styles.sectionTitle}>Comentarios y Fotos</Heading>
+                        <Box style={styles.comments}>
                             {mockComments.map((comment) => (
-                                <div key={comment.id} style={styles.comment}>
-                                    <div style={styles.commentHeader}>
-                                        <strong>{comment.user}</strong>
-                                        <div style={styles.rating}>
+                                <Box key={comment.id} style={styles.comment}>
+                                    <Box style={styles.commentHeader}>
+                                        <Text as="strong">{comment.user}</Text>
+                                        <Box style={styles.rating}>
                                             {[...Array(comment.rating)].map((_, i) => (
                                                 <Star key={i} size={16} fill="#ffc107" color="#ffc107" />
                                             ))}
-                                        </div>
-                                    </div>
-                                    <p style={styles.commentText}>{comment.text}</p>
+                                        </Box>
+                                    </Box>
+                                    <Text style={styles.commentText}>{comment.text}</Text>
                                     {comment.image && (
-                                        <img src={comment.image} alt="Foto del usuario" style={styles.commentImage} />
+                                        <Image src={comment.image} alt="Foto del usuario" style={styles.commentImage} />
                                     )}
-                                    <span style={styles.commentDate}>{comment.date}</span>
-                                </div>
+                                    <Text as="span" style={styles.commentDate}>{comment.date}</Text>
+                                </Box>
                             ))}
-                        </div>
-                    </section>
-                </div>
-            </div>
-        </div>
+                        </Box>
+                    </Section>
+                </Box>
+            </Box>
+        </Box>
     );
 }
 

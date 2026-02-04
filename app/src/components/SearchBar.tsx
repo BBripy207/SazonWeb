@@ -1,6 +1,7 @@
 import { Search } from 'lucide-react';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import Box from './ui/Box';
 import { colors, spacing, fontSize, borderRadius } from '../styles/theme';
 
 export default function SearchBar() {
@@ -15,8 +16,8 @@ export default function SearchBar() {
     };
 
     return (
-        <form onSubmit={handleSubmit} style={styles.form}>
-            <div style={styles.container}>
+        <Box as="form" onSubmit={handleSubmit} style={styles.form}>
+            <Box style={styles.container}>
                 <Search size={20} style={styles.icon} />
                 <input
                     type="text"
@@ -25,8 +26,8 @@ export default function SearchBar() {
                     onChange={(e) => setQuery(e.target.value)}
                     style={styles.input}
                 />
-            </div>
-        </form>
+            </Box>
+        </Box>
     );
 }
 

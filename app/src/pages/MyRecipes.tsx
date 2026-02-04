@@ -1,6 +1,9 @@
 import RecipeCard from '../components/RecipeCard';
 import Container from '../components/layout/Container';
 import PageTitle from '../components/layout/PageTitle';
+import Box from '../components/ui/Box';
+import Heading from '../components/ui/Heading';
+import Section from '../components/ui/Section';
 import { History, Heart } from 'lucide-react';
 import logo from '../assets/images/sasonweblogo.png';
 import { colors, spacing, fontSize, fontWeight } from '../styles/theme';
@@ -49,29 +52,29 @@ export default function MyRecipes() {
         <Container>
             <PageTitle>Mi Recetario</PageTitle>
 
-            <section style={styles.section}>
-                <div style={styles.sectionHeader}>
+            <Section style={styles.section}>
+                <Box style={styles.sectionHeader}>
                     <Heart size={24} />
-                    <h2 style={styles.sectionTitle}>Recetas Guardadas</h2>
-                </div>
-                <div style={styles.grid}>
+                    <Heading level={2} style={styles.sectionTitle}>Recetas Guardadas</Heading>
+                </Box>
+                <Box style={styles.grid}>
                     {mockSaved.map((recipe) => (
                         <RecipeCard key={recipe.id} recipe={recipe} />
                     ))}
-                </div>
-            </section>
+                </Box>
+            </Section>
 
-            <section style={styles.section}>
-                <div style={styles.sectionHeader}>
+            <Section style={styles.section}>
+                <Box style={styles.sectionHeader}>
                     <History size={24} />
-                    <h2 style={styles.sectionTitle}>Vistas Recientemente</h2>
-                </div>
-                <div style={styles.grid}>
+                    <Heading level={2} style={styles.sectionTitle}>Vistas Recientemente</Heading>
+                </Box>
+                <Box style={styles.grid}>
                     {mockRecent.map((recipe) => (
                         <RecipeCard key={recipe.id} recipe={recipe} />
                     ))}
-                </div>
-            </section>
+                </Box>
+            </Section>
         </Container>
     );
 }

@@ -1,6 +1,10 @@
-import { Link } from 'react-router-dom';
 import { Clock } from 'lucide-react';
 import type { Recipe } from '../types';
+import Box from './ui/Box';
+import Text from './ui/Text';
+import Heading from './ui/Heading';
+import Image from './ui/Image';
+import LinkComponent from './ui/Link';
 import { colors, spacing, fontSize, fontWeight, borderRadius } from '../styles/theme';
 
 interface Props {
@@ -9,19 +13,19 @@ interface Props {
 
 export default function RecipeCard({ recipe }: Props) {
     return (
-        <Link to={`/receta/${recipe.id}`} style={styles.card}>
-            <img src={recipe.image} alt={recipe.title} style={styles.image} />
-            <div style={styles.content}>
-                <h3 style={styles.title}>{recipe.title}</h3>
-                <div style={styles.info}>
-                    <span style={styles.badge}>{recipe.difficulty}</span>
-                    <span style={styles.time}>
+        <LinkComponent to={`/receta/${recipe.id}`} style={styles.card}>
+            <Image src={recipe.image} alt={recipe.title} style={styles.image} />
+            <Box style={styles.content}>
+                <Heading level={3} style={styles.title}>{recipe.title}</Heading>
+                <Box style={styles.info}>
+                    <Text as="span" style={styles.badge}>{recipe.difficulty}</Text>
+                    <Text as="span" style={styles.time}>
                         <Clock size={16} />
                         {recipe.time} min
-                    </span>
-                </div>
-            </div>
-        </Link>
+                    </Text>
+                </Box>
+            </Box>
+        </LinkComponent>
     );
 }
 

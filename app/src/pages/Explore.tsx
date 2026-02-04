@@ -2,6 +2,8 @@ import { useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import RecipeCard from '../components/RecipeCard';
 import Container from '../components/layout/Container';
+import Box from '../components/ui/Box';
+import Heading from '../components/ui/Heading';
 import { Filter } from 'lucide-react';
 import logo from '../assets/images/sasonweblogo.png';
 import { colors, spacing, fontSize, fontWeight } from '../styles/theme';
@@ -60,11 +62,11 @@ export default function Explore() {
 
     return (
         <Container>
-            <div style={styles.header}>
-                <h1 style={styles.title}>
+            <Box style={styles.header}>
+                <Heading level={1} style={styles.title}>
                     {query ? `Resultados para "${query}"` : 'Explorar Recetas'}
-                </h1>
-                <div style={styles.filters}>
+                </Heading>
+                <Box style={styles.filters}>
                     <Filter size={20} />
                     <select
                         value={difficulty}
@@ -76,16 +78,16 @@ export default function Explore() {
                         <option value="Media">Media</option>
                         <option value="Difícil">Difícil</option>
                     </select>
-                </div>
-            </div>
+                </Box>
+            </Box>
 
-            <div style={styles.grid}>
+            <Box style={styles.grid}>
                 {mockRecipes
                     .filter((r) => !difficulty || r.difficulty === difficulty)
                     .map((recipe) => (
                         <RecipeCard key={recipe.id} recipe={recipe} />
                     ))}
-            </div>
+            </Box>
         </Container>
     );
 }

@@ -4,6 +4,8 @@ import Container from '../components/layout/Container';
 import PageTitle from '../components/layout/PageTitle';
 import Input from '../components/ui/Input';
 import Button from '../components/ui/Button';
+import Box from '../components/ui/Box';
+import Text from '../components/ui/Text';
 import { colors, spacing, fontSize, fontWeight, borderRadius } from '../styles/theme';
 
 export default function UploadRecipe() {
@@ -20,7 +22,7 @@ export default function UploadRecipe() {
     return (
         <Container maxWidth="800px">
             <PageTitle>Subir Receta</PageTitle>
-            <form onSubmit={handleSubmit} style={styles.form}>
+            <Box as="form" onSubmit={handleSubmit} style={styles.form}>
                 <Input
                     label="Título de la receta"
                     type="text"
@@ -29,7 +31,7 @@ export default function UploadRecipe() {
                     required
                 />
 
-                <div style={styles.row}>
+                <Box style={styles.row}>
                     <Input
                         label="Tiempo (minutos)"
                         type="number"
@@ -44,8 +46,8 @@ export default function UploadRecipe() {
                         onChange={(e) => setServings(e.target.value)}
                         required
                     />
-                    <div style={styles.field}>
-                        <label style={styles.label}>Dificultad</label>
+                    <Box style={styles.field}>
+                        <Text as="label" style={styles.label}>Dificultad</Text>
                         <select
                             value={difficulty}
                             onChange={(e) => setDifficulty(e.target.value)}
@@ -55,40 +57,40 @@ export default function UploadRecipe() {
                             <option>Media</option>
                             <option>Difícil</option>
                         </select>
-                    </div>
-                </div>
+                    </Box>
+                </Box>
 
-                <div style={styles.field}>
-                    <label style={styles.label}>Ingredientes</label>
+                <Box style={styles.field}>
+                    <Text as="label" style={styles.label}>Ingredientes</Text>
                     <textarea
                         placeholder="Escribe cada ingrediente con su medida (ej: 250g harina)"
                         style={{ ...styles.input, minHeight: '100px' }}
                         required
                     />
-                </div>
+                </Box>
 
-                <div style={styles.field}>
-                    <label style={styles.label}>Instrucciones</label>
+                <Box style={styles.field}>
+                    <Text as="label" style={styles.label}>Instrucciones</Text>
                     <textarea
                         placeholder="Escribe cada paso de la receta"
                         style={{ ...styles.input, minHeight: '150px' }}
                         required
                     />
-                </div>
+                </Box>
 
-                <div style={styles.field}>
-                    <label style={styles.label}>Imagen</label>
-                    <div style={styles.upload}>
+                <Box style={styles.field}>
+                    <Text as="label" style={styles.label}>Imagen</Text>
+                    <Box style={styles.upload}>
                         <Upload size={32} />
-                        <span>Arrastra una imagen o haz clic para subir</span>
+                        <Text as="span">Arrastra una imagen o haz clic para subir</Text>
                         <input type="file" accept="image/*" style={styles.fileInput} />
-                    </div>
-                </div>
+                    </Box>
+                </Box>
 
                 <Button type="submit" variant="primary" size="lg">
                     Publicar Receta
                 </Button>
-            </form>
+            </Box>
         </Container>
     );
 }

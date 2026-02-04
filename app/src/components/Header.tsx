@@ -1,10 +1,13 @@
-import { Link } from 'react-router-dom';
 import { ChefHat, BookMarked, User, Upload } from 'lucide-react';
 import logo from '../assets/images/sasonweblogo.png';
 import SearchBar from './SearchBar';
 import Modal from './ui/Modal';
 import Input from './ui/Input';
 import Button from './ui/Button';
+import Box from './ui/Box';
+import Text from './ui/Text';
+import Image from './ui/Image';
+import LinkComponent from './ui/Link';
 import useModal from '../hooks/useModal';
 import { colors, spacing, fontWeight } from '../styles/theme';
 
@@ -12,56 +15,56 @@ export default function Header() {
     const { isOpen, toggle, close } = useModal();
 
     return (
-        <header style={styles.header}>
-            <div style={styles.topBar}>
-                <div style={styles.container}>
-                    <Link to="/" style={styles.logoLink}>
-                        <img src={logo} alt="SazonWeb" style={styles.logo} />
-                    </Link>
-                    <div style={styles.searchWrapper}>
+        <Box as="header" style={styles.header}>
+            <Box style={styles.topBar}>
+                <Box style={styles.container}>
+                    <LinkComponent to="/" style={styles.logoLink}>
+                        <Image src={logo} alt="SazonWeb" style={styles.logo} />
+                    </LinkComponent>
+                    <Box style={styles.searchWrapper}>
                         <SearchBar />
-                    </div>
+                    </Box>
                     <Button onClick={toggle} size="md" variant="primary">
                         Iniciar sesión
                     </Button>
-                </div>
-            </div>
-            <nav style={styles.nav}>
-                <div style={styles.container}>
-                    <div style={styles.navLinks}>
-                        <Link to="/explorar" style={styles.navItem}>
+                </Box>
+            </Box>
+            <Box as="nav" style={styles.nav}>
+                <Box style={styles.container}>
+                    <Box style={styles.navLinks}>
+                        <LinkComponent to="/explorar" style={styles.navItem}>
                             <ChefHat size={20} />
-                            <span>Recetas</span>
-                        </Link>
-                        <Link to="/mi-recetario" style={styles.navItem}>
+                            <Text as="span">Recetas</Text>
+                        </LinkComponent>
+                        <LinkComponent to="/mi-recetario" style={styles.navItem}>
                             <BookMarked size={20} />
-                            <span>Mi Recetario</span>
-                        </Link>
-                        <Link to="/subir-receta" style={styles.navItem}>
+                            <Text as="span">Mi Recetario</Text>
+                        </LinkComponent>
+                        <LinkComponent to="/subir-receta" style={styles.navItem}>
                             <Upload size={20} />
-                            <span>Subir Receta</span>
-                        </Link>
-                        <Link to="/contacto" style={styles.navItem}>
+                            <Text as="span">Subir Receta</Text>
+                        </LinkComponent>
+                        <LinkComponent to="/contacto" style={styles.navItem}>
                             <User size={20} />
-                            <span>Contacto</span>
-                        </Link>
-                    </div>
-                </div>
-            </nav>
+                            <Text as="span">Contacto</Text>
+                        </LinkComponent>
+                    </Box>
+                </Box>
+            </Box>
 
             <Modal isOpen={isOpen} onClose={close} title="Iniciar sesión">
-                <form style={styles.form}>
+                <Box as="form" style={styles.form}>
                     <Input type="email" placeholder="Correo electrónico" required />
                     <Input type="password" placeholder="Contraseña" required />
                     <Button type="submit" variant="primary" size="lg">
                         Entrar
                     </Button>
-                    <p style={styles.text}>
-                        ¿No tienes cuenta? <a href="#" style={styles.link}>Regístrate</a>
-                    </p>
-                </form>
+                    <Text style={styles.text}>
+                        ¿No tienes cuenta? <Box as="a" href="#" style={styles.link}>Regístrate</Box>
+                    </Text>
+                </Box>
             </Modal>
-        </header>
+        </Box>
     );
 }
 
