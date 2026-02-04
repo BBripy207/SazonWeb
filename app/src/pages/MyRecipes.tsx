@@ -1,6 +1,7 @@
 import RecipeCard from '../components/RecipeCard';
 import Container from '../components/layout/Container';
 import PageTitle from '../components/layout/PageTitle';
+import Grid from '../components/layout/Grid';
 import Box from '../components/ui/Box';
 import Heading from '../components/ui/Heading';
 import Section from '../components/ui/Section';
@@ -57,11 +58,11 @@ export default function MyRecipes() {
                     <Heart size={24} />
                     <Heading level={2} style={styles.sectionTitle}>Recetas Guardadas</Heading>
                 </Box>
-                <Box style={styles.grid}>
+                <Grid columns="recipes" gap={spacing.lg}>
                     {mockSaved.map((recipe) => (
                         <RecipeCard key={recipe.id} recipe={recipe} />
                     ))}
-                </Box>
+                </Grid>
             </Section>
 
             <Section style={styles.section}>
@@ -69,11 +70,11 @@ export default function MyRecipes() {
                     <History size={24} />
                     <Heading level={2} style={styles.sectionTitle}>Vistas Recientemente</Heading>
                 </Box>
-                <Box style={styles.grid}>
+                <Grid columns="recipes" gap={spacing.lg}>
                     {mockRecent.map((recipe) => (
                         <RecipeCard key={recipe.id} recipe={recipe} />
                     ))}
-                </Box>
+                </Grid>
             </Section>
         </Container>
     );
@@ -95,10 +96,5 @@ const styles: Record<string, React.CSSProperties> = {
         fontWeight: fontWeight.semibold,
         margin: 0,
         color: colors.primaryDark,
-    },
-    grid: {
-        display: 'grid',
-        gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))',
-        gap: spacing.lg,
     },
 };

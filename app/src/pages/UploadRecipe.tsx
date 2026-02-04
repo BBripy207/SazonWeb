@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Upload } from 'lucide-react';
 import Container from '../components/layout/Container';
 import PageTitle from '../components/layout/PageTitle';
+import Grid from '../components/layout/Grid';
 import Input from '../components/ui/Input';
 import Button from '../components/ui/Button';
 import Box from '../components/ui/Box';
@@ -31,7 +32,7 @@ export default function UploadRecipe() {
                     required
                 />
 
-                <Box style={styles.row}>
+                <Grid columns="form" gap={spacing.md}>
                     <Input
                         label="Tiempo (minutos)"
                         type="number"
@@ -58,7 +59,7 @@ export default function UploadRecipe() {
                             <option>Difícil</option>
                         </select>
                     </Box>
-                </Box>
+                </Grid>
 
                 <Box style={styles.field}>
                     <Text as="label" style={styles.label}>Ingredientes</Text>
@@ -118,11 +119,6 @@ const styles: Record<string, React.CSSProperties> = {
         fontSize: fontSize.base,
         fontFamily: 'inherit',
         transition: 'border-color 0.3s',
-    },
-    row: {
-        display: 'grid',
-        gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))',
-        gap: spacing.md,
     },
     upload: {
         display: 'flex',

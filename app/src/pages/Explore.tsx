@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import RecipeCard from '../components/RecipeCard';
 import Container from '../components/layout/Container';
+import Grid from '../components/layout/Grid';
 import Box from '../components/ui/Box';
 import Heading from '../components/ui/Heading';
 import { Filter } from 'lucide-react';
@@ -81,13 +82,13 @@ export default function Explore() {
                 </Box>
             </Box>
 
-            <Box style={styles.grid}>
+            <Grid columns="recipes" gap={spacing.lg}>
                 {mockRecipes
                     .filter((r) => !difficulty || r.difficulty === difficulty)
                     .map((recipe) => (
                         <RecipeCard key={recipe.id} recipe={recipe} />
                     ))}
-            </Box>
+            </Grid>
         </Container>
     );
 }
@@ -118,10 +119,5 @@ const styles: Record<string, React.CSSProperties> = {
         border: `1px solid ${colors.border}`,
         borderRadius: '4px',
         fontSize: fontSize.base,
-    },
-    grid: {
-        display: 'grid',
-        gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))',
-        gap: spacing.lg,
     },
 };

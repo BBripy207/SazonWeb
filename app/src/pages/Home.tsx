@@ -1,6 +1,7 @@
 import SearchBar from '../components/SearchBar';
 import RecipeCard from '../components/RecipeCard';
 import Container from '../components/layout/Container';
+import Grid from '../components/layout/Grid';
 import Box from '../components/ui/Box';
 import Text from '../components/ui/Text';
 import Heading from '../components/ui/Heading';
@@ -62,23 +63,23 @@ export default function Home() {
 
             <Section style={styles.section}>
                 <Heading level={2} style={styles.sectionTitle}>Categorías</Heading>
-                <Box style={styles.categories}>
+                <Grid columns="categories" gap={spacing.md}>
                     {categories.map((cat) => (
                         <Box key={cat.name} style={styles.category}>
                             <cat.icon size={32} />
                             <Text as="span">{cat.name}</Text>
                         </Box>
                     ))}
-                </Box>
+                </Grid>
             </Section>
 
             <Section style={styles.section}>
                 <Heading level={2} style={styles.sectionTitle}>Vistos Recientemente</Heading>
-                <Box style={styles.grid}>
+                <Grid columns="recipes" gap={spacing.lg}>
                     {mockRecipes.map((recipe) => (
                         <RecipeCard key={recipe.id} recipe={recipe} />
                     ))}
-                </Box>
+                </Grid>
             </Section>
         </Container>
     );
@@ -109,11 +110,6 @@ const styles: Record<string, React.CSSProperties> = {
         fontWeight: fontWeight.semibold,
         color: colors.primaryDark,
     },
-    categories: {
-        display: 'grid',
-        gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))',
-        gap: spacing.md,
-    },
     category: {
         display: 'flex',
         flexDirection: 'column',
@@ -127,10 +123,5 @@ const styles: Record<string, React.CSSProperties> = {
         border: '2px solid transparent',
         color: colors.primary,
         fontWeight: fontWeight.semibold,
-    },
-    grid: {
-        display: 'grid',
-        gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))',
-        gap: spacing.lg,
     },
 };

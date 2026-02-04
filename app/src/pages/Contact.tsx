@@ -1,6 +1,7 @@
 import { Phone } from 'lucide-react';
 import Container from '../components/layout/Container';
 import PageTitle from '../components/layout/PageTitle';
+import Grid from '../components/layout/Grid';
 import Box from '../components/ui/Box';
 import Text from '../components/ui/Text';
 import Heading from '../components/ui/Heading';
@@ -34,7 +35,7 @@ export default function Contact() {
 
             <Section style={styles.section}>
                 <Heading level={2} style={styles.subtitle}>Contacta con nuestro equipo</Heading>
-                <Box style={styles.contacts}>
+                <Grid columns="contacts" gap={spacing.lg} style={{ marginTop: spacing.lg }}>
                     {contacts.map((contact) => (
                         <Box key={contact.phone} style={styles.card}>
                             <Text as="strong" style={styles.name}>{contact.name}</Text>
@@ -44,7 +45,7 @@ export default function Contact() {
                             </Box>
                         </Box>
                     ))}
-                </Box>
+                </Grid>
             </Section>
 
             <Section style={styles.section}>
@@ -73,12 +74,6 @@ const styles: Record<string, React.CSSProperties> = {
         lineHeight: 1.7,
         color: colors.textLight,
         marginBottom: spacing.md,
-    },
-    contacts: {
-        display: 'grid',
-        gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))',
-        gap: spacing.lg,
-        marginTop: spacing.lg,
     },
     card: {
         padding: spacing.lg,
