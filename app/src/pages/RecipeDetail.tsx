@@ -148,7 +148,8 @@ const styles: Record<string, React.CSSProperties> = {
     heroImage: {
         width: '100%',
         height: '100%',
-        objectFit: 'cover',
+        objectFit: 'contain',
+        backgroundColor: colors.backgroundLight,
     },
     heroOverlay: {
         position: 'absolute',
