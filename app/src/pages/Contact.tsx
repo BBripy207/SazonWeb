@@ -1,4 +1,5 @@
 import { Phone } from 'lucide-react';
+import { useState } from 'react';
 import Container from '../components/layout/Container';
 import PageTitle from '../components/layout/PageTitle';
 import Grid from '../components/layout/Grid';
@@ -6,6 +7,8 @@ import Box from '../components/ui/Box';
 import Text from '../components/ui/Text';
 import Heading from '../components/ui/Heading';
 import Section from '../components/ui/Section';
+import Input from '../components/ui/Input';
+import Button from '../components/ui/Button';
 import { colors, spacing, fontSize, fontWeight, borderRadius } from '../styles/theme';
 
 const contacts = [
@@ -16,6 +19,18 @@ const contacts = [
 ];
 
 export default function Contact() {
+    const [name, setName] = useState('');
+    const [email, setEmail] = useState('');
+    const [message, setMessage] = useState('');
+
+    const handleSubmit = (e: React.FormEvent) => {
+        e.preventDefault();
+        alert('Mensaje enviado correctamente');
+        setName('');
+        setEmail('');
+        setMessage('');
+    };
+
     return (
         <Container maxWidth="1000px">
             <PageTitle>Contacto</PageTitle>
@@ -49,11 +64,37 @@ export default function Contact() {
             </Section>
 
             <Section style={styles.section}>
-                <Heading level={2} style={styles.subtitle}>Soporte</Heading>
-                <Text style={styles.text}>
-                    Para dudas sobre medidas, sugerencias o reportar problemas,
-                    no dudes en contactarnos.
-                </Text>
+                <Heading level={2} style={{ ...styles.subtitle, textAlign: 'center' }}>Envíanos un mensaje</Heading>
+                <Box as="form" onSubmit={handleSubmit} style={styles.form}>
+                    <Input
+                        label="Nombre"
+                        type="text"
+                        value={name}
+                        onChange={(e) => setName(e.target.value)}
+                        required
+                    />
+                    <Input
+                        label="Correo electrónico"
+                        type="email"
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                        required
+                    />
+                    <Box style={styles.field}>
+                        <Text as="label" style={styles.label}>Mensaje</Text>
+                        <textarea
+                            value={message}
+                            onChange={(e) => setMessage(e.target.value)}
+                            placeholder="Escribe tu mensaje aquí..."
+                            style={styles.textarea}
+                            required
+                            rows={6}
+                        />
+                    </Box>
+                    <Button type="submit" variant="primary" size="lg">
+                        Enviar Mensaje
+                    </Button>
+                </Box>
             </Section>
         </Container>
     );
@@ -96,5 +137,33 @@ const styles: Record<string, React.CSSProperties> = {
         textDecoration: 'none',
         fontSize: fontSize.base,
         fontWeight: fontWeight.medium,
+    },
+    form: {
+        display: 'flex',
+        flexDirection: 'column',
+        gap: spacing.lg,
+        maxWidth: '600px',
+        marginTop: spacing.lg,
+        marginLeft: 'auto',
+        marginRight: 'auto',
+    },
+    field: {
+        display: 'flex',
+        flexDirection: 'column',
+        gap: spacing.sm,
+    },
+    label: {
+        fontWeight: fontWeight.semibold,
+        fontSize: fontSize.base,
+        color: colors.primaryDark,
+    },
+    textarea: {
+        padding: '0.75rem',
+        border: `2px solid ${colors.border}`,
+        borderRadius: borderRadius.md,
+        fontSize: fontSize.base,
+        fontFamily: 'inherit',
+        transition: 'border-color 0.3s',
+        resize: 'vertical',
     },
 };
