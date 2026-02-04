@@ -13,6 +13,7 @@ import { colors, spacing, fontWeight } from '../styles/theme';
 
 export default function Header() {
     const { isOpen, toggle, close } = useModal();
+    const registerModal = useModal();
 
     return (
         <Box as="header" style={styles.header}>
@@ -60,7 +61,22 @@ export default function Header() {
                         Entrar
                     </Button>
                     <Text style={styles.text}>
-                        ¿No tienes cuenta? <Box as="a" href="#" style={styles.link}>Regístrate</Box>
+                        ¿No tienes cuenta? <Box as="a" href="#" onClick={(e) => { e?.preventDefault(); close(); registerModal.open(); }} style={styles.link}>Regístrate</Box>
+                    </Text>
+                </Box>
+            </Modal>
+
+            <Modal isOpen={registerModal.isOpen} onClose={registerModal.close} title="Crear cuenta">
+                <Box as="form" style={styles.form}>
+                    <Input type="text" placeholder="Nombre completo" required />
+                    <Input type="email" placeholder="Correo electrónico" required />
+                    <Input type="password" placeholder="Contraseña" required />
+                    <Input type="password" placeholder="Confirmar contraseña" required />
+                    <Button type="submit" variant="primary" size="lg">
+                        Registrarse
+                    </Button>
+                    <Text style={styles.text}>
+                        ¿Ya tienes cuenta? <Box as="a" href="#" onClick={(e) => { e?.preventDefault(); registerModal.close(); toggle(); }} style={styles.link}>Inicia sesión</Box>
                     </Text>
                 </Box>
             </Modal>

@@ -3,7 +3,7 @@ import React from 'react';
 interface BoxProps extends React.HTMLAttributes<HTMLElement> {
     children?: React.ReactNode;
     style?: React.CSSProperties;
-    onClick?: () => void;
+    onClick?: (e?: React.MouseEvent) => void;
     as?: 'div' | 'form' | 'header' | 'footer' | 'nav' | 'section' | 'a';
     onSubmit?: (e: React.FormEvent) => void;
     href?: string;
