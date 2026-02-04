@@ -6,7 +6,7 @@ import Modal from './ui/Modal';
 import Input from './ui/Input';
 import Button from './ui/Button';
 import useModal from '../hooks/useModal';
-import { colors, spacing, borderRadius, fontWeight } from '../styles/theme';
+import { colors, spacing, fontWeight } from '../styles/theme';
 
 export default function Header() {
     const { isOpen, toggle, close } = useModal();

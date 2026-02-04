@@ -1,7 +1,9 @@
 import SearchBar from '../components/SearchBar';
 import RecipeCard from '../components/RecipeCard';
+import Container from '../components/layout/Container';
 import { ChefHat, Clock, Heart } from 'lucide-react';
 import logo from '../assets/images/sasonweblogo.png';
+import { colors, spacing, fontSize, fontWeight, borderRadius } from '../styles/theme';
 
 const categories = [
     { name: 'Postres', icon: Heart },
@@ -47,7 +49,7 @@ const mockRecipes = [
 
 export default function Home() {
     return (
-        <div style={styles.page}>
+        <Container>
             <section style={styles.hero}>
                 <h1 style={styles.title}>Encuentra tu receta perfecta</h1>
                 <p style={styles.subtitle}>Medidas estandarizadas para resultados consistentes</p>
@@ -74,62 +76,57 @@ export default function Home() {
                     ))}
                 </div>
             </section>
-        </div>
+        </Container>
     );
 }
 
 const styles: Record<string, React.CSSProperties> = {
-    page: {
-        maxWidth: '1200px',
-        margin: '0 auto',
-        padding: '2rem 1rem',
-    },
     hero: {
         textAlign: 'center',
-        marginBottom: '3rem',
+        marginBottom: spacing.xxl,
     },
     title: {
-        fontSize: '2.5rem',
-        margin: '0 0 1rem',
-        fontWeight: 700,
-        color: '#5d4037',
+        fontSize: fontSize.xxxl,
+        margin: `0 0 ${spacing.md}`,
+        fontWeight: fontWeight.bold,
+        color: colors.primaryDark,
     },
     subtitle: {
-        fontSize: '1.25rem',
-        color: '#666',
-        marginBottom: '2rem',
+        fontSize: fontSize.xl,
+        color: colors.textLight,
+        marginBottom: spacing.xl,
     },
     section: {
-        marginBottom: '3rem',
+        marginBottom: spacing.xxl,
     },
     sectionTitle: {
-        fontSize: '1.75rem',
-        marginBottom: '1.5rem',
-        fontWeight: 600,
-        color: '#2d3142',
+        fontSize: fontSize.xxl,
+        marginBottom: spacing.lg,
+        fontWeight: fontWeight.semibold,
+        color: colors.primaryDark,
     },
     categories: {
         display: 'grid',
         gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))',
-        gap: '1rem',
+        gap: spacing.md,
     },
     category: {
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
-        gap: '0.5rem',
-        padding: '1.5rem',
-        background: 'linear-gradient(135deg, #f5f0e8 0%, #ebe5dc 100%)',
-        borderRadius: '12px',
+        gap: spacing.sm,
+        padding: spacing.lg,
+        background: colors.backgroundGradient,
+        borderRadius: borderRadius.lg,
         cursor: 'pointer',
         transition: 'all 0.3s ease',
         border: '2px solid transparent',
-        color: '#8d6e63',
-        fontWeight: 600,
+        color: colors.primary,
+        fontWeight: fontWeight.semibold,
     },
     grid: {
         display: 'grid',
         gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))',
-        gap: '1.5rem',
+        gap: spacing.lg,
     },
 };

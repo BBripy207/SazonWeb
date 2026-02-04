@@ -1,3 +1,5 @@
+import { colors, spacing } from '../styles/theme';
+
 export default function Footer() {
     return (
         <footer style={styles.footer}>
@@ -10,14 +12,14 @@ export default function Footer() {
 
 const styles: Record<string, React.CSSProperties> = {
     footer: {
-        background: '#5d4037',
-        color: '#f5f0e8',
+        background: colors.primaryDark,
+        color: colors.backgroundLight,
         marginTop: 'auto',
     },
     container: {
         maxWidth: '1200px',
         margin: '0 auto',
-        padding: '2rem 1rem',
+        padding: `${spacing.xl} ${spacing.md}`,
         textAlign: 'center',
     },
     text: {

@@ -1,5 +1,10 @@
 import { useState } from 'react';
 import { Upload } from 'lucide-react';
+import Container from '../components/layout/Container';
+import PageTitle from '../components/layout/PageTitle';
+import Input from '../components/ui/Input';
+import Button from '../components/ui/Button';
+import { colors, spacing, fontSize, fontWeight, borderRadius } from '../styles/theme';
 
 export default function UploadRecipe() {
     const [title, setTitle] = useState('');
@@ -13,41 +18,32 @@ export default function UploadRecipe() {
     };
 
     return (
-        <div style={styles.page}>
-            <h1 style={styles.title}>Subir Receta</h1>
+        <Container maxWidth="800px">
+            <PageTitle>Subir Receta</PageTitle>
             <form onSubmit={handleSubmit} style={styles.form}>
-                <div style={styles.field}>
-                    <label style={styles.label}>Título de la receta</label>
-                    <input
-                        type="text"
-                        value={title}
-                        onChange={(e) => setTitle(e.target.value)}
-                        style={styles.input}
-                        required
-                    />
-                </div>
+                <Input
+                    label="Título de la receta"
+                    type="text"
+                    value={title}
+                    onChange={(e) => setTitle(e.target.value)}
+                    required
+                />
 
                 <div style={styles.row}>
-                    <div style={styles.field}>
-                        <label style={styles.label}>Tiempo (minutos)</label>
-                        <input
-                            type="number"
-                            value={time}
-                            onChange={(e) => setTime(e.target.value)}
-                            style={styles.input}
-                            required
-                        />
-                    </div>
-                    <div style={styles.field}>
-                        <label style={styles.label}>Porciones</label>
-                        <input
-                            type="number"
-                            value={servings}
-                            onChange={(e) => setServings(e.target.value)}
-                            style={styles.input}
-                            required
-                        />
-                    </div>
+                    <Input
+                        label="Tiempo (minutos)"
+                        type="number"
+                        value={time}
+                        onChange={(e) => setTime(e.target.value)}
+                        required
+                    />
+                    <Input
+                        label="Porciones"
+                        type="number"
+                        value={servings}
+                        onChange={(e) => setServings(e.target.value)}
+                        required
+                    />
                     <div style={styles.field}>
                         <label style={styles.label}>Dificultad</label>
                         <select
@@ -89,83 +85,61 @@ export default function UploadRecipe() {
                     </div>
                 </div>
 
-                <button type="submit" style={styles.button}>
+                <Button type="submit" variant="primary" size="lg">
                     Publicar Receta
-                </button>
+                </Button>
             </form>
-        </div>
+        </Container>
     );
 }
 
 const styles: Record<string, React.CSSProperties> = {
-    page: {
-        maxWidth: '800px',
-        margin: '0 auto',
-        padding: '2rem 1rem',
-    },
-    title: {
-        fontSize: '2.5rem',
-        marginBottom: '2rem',
-        fontWeight: 700,
-        color: '#5d4037',
-    },
     form: {
         display: 'flex',
         flexDirection: 'column',
-        gap: '1.5rem',
+        gap: spacing.lg,
     },
     field: {
         display: 'flex',
         flexDirection: 'column',
-        gap: '0.5rem',
+        gap: spacing.sm,
     },
     label: {
-        fontWeight: 600,
-        fontSize: '1rem',
-        color: '#2d3142',
+        fontWeight: fontWeight.semibold,
+        fontSize: fontSize.base,
+        color: colors.primaryDark,
     },
     input: {
         padding: '0.75rem',
-        border: '2px solid #d7ccc8',
-        borderRadius: '8px',
-        fontSize: '1rem',
+        border: `2px solid ${colors.border}`,
+        borderRadius: borderRadius.md,
+        fontSize: fontSize.base,
         fontFamily: 'inherit',
         transition: 'border-color 0.3s',
     },
     row: {
         display: 'grid',
         gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))',
-        gap: '1rem',
+        gap: spacing.md,
     },
     upload: {
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
         justifyContent: 'center',
-        gap: '0.5rem',
-        padding: '2rem',
-        border: '2px dashed #8d6e63',
-        borderRadius: '12px',
+        gap: spacing.sm,
+        padding: spacing.xl,
+        border: `2px dashed ${colors.primary}`,
+        borderRadius: borderRadius.lg,
         cursor: 'pointer',
         position: 'relative',
-        background: '#f5f0e8',
-        color: '#8d6e63',
+        background: colors.backgroundLight,
+        color: colors.primary,
     },
     fileInput: {
         position: 'absolute',
         inset: 0,
         opacity: 0,
         cursor: 'pointer',
-    },
-    button: {
-        padding: '1rem',
-        background: '#8d6e63',
-        color: '#fff',
-        border: 'none',
-        borderRadius: '8px',
-        fontSize: '1.125rem',
-        fontWeight: 600,
-        cursor: 'pointer',
-        transition: 'background 0.3s',
     },
 };

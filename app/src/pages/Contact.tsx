@@ -1,4 +1,7 @@
 import { Phone } from 'lucide-react';
+import Container from '../components/layout/Container';
+import PageTitle from '../components/layout/PageTitle';
+import { colors, spacing, fontSize, fontWeight, borderRadius } from '../styles/theme';
 
 const contacts = [
     { name: 'Leo Arguello', phone: '614 155 8800' },
@@ -9,8 +12,8 @@ const contacts = [
 
 export default function Contact() {
     return (
-        <div style={styles.page}>
-            <h1 style={styles.title}>Contacto</h1>
+        <Container maxWidth="1000px">
+            <PageTitle>Contacto</PageTitle>
 
             <section style={styles.section}>
                 <h2 style={styles.subtitle}>Sobre Nosotros</h2>
@@ -47,63 +50,52 @@ export default function Contact() {
                     no dudes en contactarnos.
                 </p>
             </section>
-        </div>
+        </Container>
     );
 }
 
 const styles: Record<string, React.CSSProperties> = {
-    page: {
-        maxWidth: '1000px',
-        margin: '0 auto',
-        padding: '2rem 1rem',
-    },
-    title: {
-        fontSize: '2.5rem',
-        marginBottom: '2rem',
-        fontWeight: 700,
-        color: '#5d4037',
-    },
     section: {
-        marginBottom: '3rem',
+        marginBottom: spacing.xxl,
     },
     subtitle: {
-        fontSize: '1.75rem',
-        marginBottom: '1rem',
-        fontWeight: 600,
-        color: '#2d3142',
+        fontSize: fontSize.xxl,
+        marginBottom: spacing.md,
+        fontWeight: fontWeight.semibold,
+        color: colors.primaryDark,
     },
     text: {
-        fontSize: '1.125rem',
+        fontSize: fontSize.lg,
         lineHeight: 1.7,
-        color: '#555',
-        marginBottom: '1rem',
+        color: colors.textLight,
+        marginBottom: spacing.md,
     },
     contacts: {
         display: 'grid',
         gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))',
-        gap: '1.5rem',
-        marginTop: '1.5rem',
+        gap: spacing.lg,
+        marginTop: spacing.lg,
     },
     card: {
-        padding: '1.5rem',
-        background: 'linear-gradient(135deg, #f5f0e8 0%, #ebe5dc 100%)',
-        borderRadius: '12px',
+        padding: spacing.lg,
+        background: colors.backgroundGradient,
+        borderRadius: borderRadius.lg,
         display: 'flex',
         flexDirection: 'column',
         gap: '0.75rem',
-        border: '1px solid #d7ccc8',
+        border: `1px solid ${colors.border}`,
     },
     name: {
-        fontSize: '1.125rem',
-        color: '#5d4037',
+        fontSize: fontSize.lg,
+        color: colors.primaryDark,
     },
     link: {
         display: 'flex',
         alignItems: 'center',
-        gap: '0.5rem',
-        color: '#8d6e63',
+        gap: spacing.sm,
+        color: colors.primary,
         textDecoration: 'none',
-        fontSize: '1rem',
-        fontWeight: 500,
+        fontSize: fontSize.base,
+        fontWeight: fontWeight.medium,
     },
 };

@@ -1,8 +1,10 @@
 import { useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import RecipeCard from '../components/RecipeCard';
+import Container from '../components/layout/Container';
 import { Filter } from 'lucide-react';
 import logo from '../assets/images/sasonweblogo.png';
+import { colors, spacing, fontSize, fontWeight } from '../styles/theme';
 
 const mockRecipes = [
     {
@@ -57,7 +59,7 @@ export default function Explore() {
     const query = searchParams.get('q') || '';
 
     return (
-        <div style={styles.page}>
+        <Container>
             <div style={styles.header}>
                 <h1 style={styles.title}>
                     {query ? `Resultados para "${query}"` : 'Explorar Recetas'}
@@ -84,45 +86,40 @@ export default function Explore() {
                         <RecipeCard key={recipe.id} recipe={recipe} />
                     ))}
             </div>
-        </div>
+        </Container>
     );
 }
 
 const styles: Record<string, React.CSSProperties> = {
-    page: {
-        maxWidth: '1200px',
-        margin: '0 auto',
-        padding: '2rem 1rem',
-    },
     header: {
         display: 'flex',
         justifyContent: 'space-between',
         alignItems: 'center',
-        marginBottom: '2rem',
+        marginBottom: spacing.xl,
         flexWrap: 'wrap',
-        gap: '1rem',
+        gap: spacing.md,
     },
     title: {
-        fontSize: '2rem',
+        fontSize: fontSize.xxxl,
         margin: 0,
-        fontWeight: 600,
-        color: '#2d3142',
+        fontWeight: fontWeight.semibold,
+        color: colors.primaryDark,
     },
     filters: {
         display: 'flex',
         alignItems: 'center',
-        gap: '0.5rem',
-        color: '#8d6e63',
+        gap: spacing.sm,
+        color: colors.primary,
     },
     select: {
-        padding: '0.5rem 1rem',
-        border: '1px solid #ddd',
+        padding: `${spacing.sm} ${spacing.md}`,
+        border: `1px solid ${colors.border}`,
         borderRadius: '4px',
-        fontSize: '1rem',
+        fontSize: fontSize.base,
     },
     grid: {
         display: 'grid',
         gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))',
-        gap: '1.5rem',
+        gap: spacing.lg,
     },
 };

@@ -1,6 +1,9 @@
 import RecipeCard from '../components/RecipeCard';
+import Container from '../components/layout/Container';
+import PageTitle from '../components/layout/PageTitle';
 import { History, Heart } from 'lucide-react';
 import logo from '../assets/images/sasonweblogo.png';
+import { colors, spacing, fontSize, fontWeight } from '../styles/theme';
 
 const mockSaved = [
     {
@@ -43,8 +46,8 @@ const mockRecent = [
 
 export default function MyRecipes() {
     return (
-        <div style={styles.page}>
-            <h1 style={styles.title}>Mi Recetario</h1>
+        <Container>
+            <PageTitle>Mi Recetario</PageTitle>
 
             <section style={styles.section}>
                 <div style={styles.sectionHeader}>
@@ -69,41 +72,30 @@ export default function MyRecipes() {
                     ))}
                 </div>
             </section>
-        </div>
+        </Container>
     );
 }
 
 const styles: Record<string, React.CSSProperties> = {
-    page: {
-        maxWidth: '1200px',
-        margin: '0 auto',
-        padding: '2rem 1rem',
-    },
-    title: {
-        fontSize: '2.5rem',
-        marginBottom: '2rem',
-        fontWeight: 700,
-        color: '#5d4037',
-    },
     section: {
-        marginBottom: '3rem',
+        marginBottom: spacing.xxl,
     },
     sectionHeader: {
         display: 'flex',
         alignItems: 'center',
         gap: '0.75rem',
-        marginBottom: '1.5rem',
-        color: '#8d6e63',
+        marginBottom: spacing.lg,
+        color: colors.primary,
     },
     sectionTitle: {
-        fontSize: '1.5rem',
-        fontWeight: 600,
+        fontSize: fontSize.xxl,
+        fontWeight: fontWeight.semibold,
         margin: 0,
-        color: '#2d3142',
+        color: colors.primaryDark,
     },
     grid: {
         display: 'grid',
         gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))',
-        gap: '1.5rem',
+        gap: spacing.lg,
     },
 };

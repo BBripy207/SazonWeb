@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom';
 import { Clock } from 'lucide-react';
 import type { Recipe } from '../types';
+import { colors, spacing, fontSize, fontWeight, borderRadius } from '../styles/theme';
 
 interface Props {
     recipe: Recipe;
@@ -27,14 +28,14 @@ export default function RecipeCard({ recipe }: Props) {
 const styles: Record<string, React.CSSProperties> = {
     card: {
         display: 'block',
-        background: '#fff',
-        borderRadius: '12px',
+        background: colors.background,
+        borderRadius: borderRadius.lg,
         overflow: 'hidden',
-        boxShadow: '0 4px 12px rgba(93,64,55,0.15)',
+        boxShadow: `0 4px 12px ${colors.shadow}`,
         textDecoration: 'none',
         color: 'inherit',
         transition: 'all 0.3s ease',
-        border: '1px solid #f5f0e8',
+        border: `1px solid ${colors.backgroundLight}`,
     },
     image: {
         width: '100%',
@@ -42,12 +43,12 @@ const styles: Record<string, React.CSSProperties> = {
         objectFit: 'cover',
     },
     content: {
-        padding: '1rem',
+        padding: spacing.md,
     },
     title: {
-        margin: '0 0 0.5rem',
-        fontSize: '1.125rem',
-        fontWeight: 600,
+        margin: `0 0 ${spacing.sm}`,
+        fontSize: fontSize.lg,
+        fontWeight: fontWeight.semibold,
     },
     info: {
         display: 'flex',
@@ -55,18 +56,18 @@ const styles: Record<string, React.CSSProperties> = {
         alignItems: 'center',
     },
     badge: {
-        padding: '0.25rem 0.5rem',
-        background: '#f5f0e8',
-        color: '#5d4037',
-        borderRadius: '6px',
-        fontSize: '0.875rem',
-        fontWeight: 600,
+        padding: `${spacing.xs} ${spacing.sm}`,
+        background: colors.backgroundLight,
+        color: colors.primaryDark,
+        borderRadius: borderRadius.sm,
+        fontSize: fontSize.sm,
+        fontWeight: fontWeight.semibold,
     },
     time: {
         display: 'flex',
         alignItems: 'center',
-        gap: '0.25rem',
-        fontSize: '0.875rem',
-        color: '#666',
+        gap: spacing.xs,
+        fontSize: fontSize.sm,
+        color: colors.textLight,
     },
 };

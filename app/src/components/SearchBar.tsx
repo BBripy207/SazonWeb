@@ -1,6 +1,7 @@
 import { Search } from 'lucide-react';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { colors, spacing, fontSize, borderRadius } from '../styles/theme';
 
 export default function SearchBar() {
     const [query, setQuery] = useState('');
@@ -39,17 +40,17 @@ const styles: Record<string, React.CSSProperties> = {
     },
     icon: {
         position: 'absolute',
-        left: '1rem',
+        left: spacing.md,
         top: '50%',
         transform: 'translateY(-50%)',
-        color: '#8d6e63',
+        color: colors.primary,
     },
     input: {
         width: '100%',
-        padding: '0.75rem 1rem 0.75rem 3rem',
-        fontSize: '1rem',
-        border: '2px solid #d7ccc8',
-        borderRadius: '12px',
+        padding: `0.75rem ${spacing.md} 0.75rem 3rem`,
+        fontSize: fontSize.base,
+        border: `2px solid ${colors.border}`,
+        borderRadius: borderRadius.lg,
         outline: 'none',
         transition: 'border-color 0.3s',
     },
