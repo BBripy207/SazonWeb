@@ -1,5 +1,7 @@
 import { Clock, Users, BookMarked, Star } from 'lucide-react';
 import logo from '../assets/images/sasonweblogo.png';
+import Button from '../components/ui/Button';
+import { colors, spacing, fontSize, fontWeight, borderRadius } from '../styles/theme';
 
 const mockRecipe = {
     id: '1',
@@ -71,10 +73,10 @@ export default function RecipeDetail() {
                     <section style={styles.section}>
                         <div style={styles.sectionHeader}>
                             <h2 style={styles.sectionTitle}>Ingredientes</h2>
-                            <button style={styles.saveBtn}>
+                            <Button onClick={() => { }}>
                                 <BookMarked size={20} />
                                 Guardar
-                            </button>
+                            </Button>
                         </div>
                         <ul style={styles.ingredientsList}>
                             {mockRecipe.ingredients.map((ing, i) => (
@@ -147,66 +149,52 @@ const styles: Record<string, React.CSSProperties> = {
         left: 0,
         right: 0,
         background: 'linear-gradient(transparent, rgba(0,0,0,0.7))',
-        padding: '2rem',
+        padding: spacing.xl,
         color: '#fff',
     },
     title: {
-        fontSize: '2.5rem',
-        margin: '0 0 1rem',
-        fontWeight: 700,
+        fontSize: fontSize.xxxl,
+        margin: `0 0 ${spacing.md}`,
+        fontWeight: fontWeight.bold,
     },
     meta: {
         display: 'flex',
-        gap: '1.5rem',
+        gap: spacing.lg,
         flexWrap: 'wrap',
     },
     metaItem: {
         display: 'flex',
         alignItems: 'center',
-        gap: '0.5rem',
+        gap: spacing.sm,
     },
     badge: {
-        padding: '0.25rem 0.75rem',
-        background: '#8d6e63',
-        borderRadius: '6px',
-        fontWeight: 600,
+        padding: `${spacing.xs} 0.75rem`,
+        background: colors.primary,
+        borderRadius: borderRadius.sm,
+        fontWeight: fontWeight.semibold,
     },
     content: {
         maxWidth: '1200px',
         margin: '0 auto',
-        padding: '2rem 1rem',
+        padding: `${spacing.xl} ${spacing.md}`,
     },
     main: {
         maxWidth: '800px',
     },
     section: {
-        marginBottom: '3rem',
+        marginBottom: spacing.xxl,
     },
     sectionHeader: {
         display: 'flex',
         justifyContent: 'space-between',
         alignItems: 'center',
-        marginBottom: '1rem',
+        marginBottom: spacing.md,
     },
     sectionTitle: {
-        fontSize: '1.75rem',
-        fontWeight: 600,
+        fontSize: fontSize.xxl,
+        fontWeight: fontWeight.semibold,
         margin: 0,
-        color: '#2d3142',
-    },
-    saveBtn: {
-        display: 'flex',
-        alignItems: 'center',
-        gap: '0.5rem',
-        padding: '0.75rem 1.5rem',
-        background: '#8d6e63',
-        color: '#fff',
-        border: 'none',
-        borderRadius: '8px',
-        cursor: 'pointer',
-        fontSize: '1rem',
-        fontWeight: 600,
-        transition: 'background 0.3s',
+        color: colors.primaryDark,
     },
     ingredientsList: {
         listStyle: 'none',
@@ -220,46 +208,46 @@ const styles: Record<string, React.CSSProperties> = {
         borderBottom: '1px solid #eee',
     },
     amount: {
-        fontWeight: 600,
-        color: '#8d6e63',
+        fontWeight: fontWeight.semibold,
+        color: colors.primary,
     },
     instructionsList: {
-        paddingLeft: '1.5rem',
+        paddingLeft: spacing.lg,
     },
     instruction: {
-        marginBottom: '1rem',
+        marginBottom: spacing.md,
         lineHeight: 1.6,
     },
     comments: {
         display: 'flex',
         flexDirection: 'column',
-        gap: '1.5rem',
+        gap: spacing.lg,
     },
     comment: {
-        padding: '1rem',
-        background: '#f8f8f8',
-        borderRadius: '8px',
+        padding: spacing.md,
+        background: colors.backgroundLight,
+        borderRadius: borderRadius.md,
     },
     commentHeader: {
         display: 'flex',
         justifyContent: 'space-between',
-        marginBottom: '0.5rem',
+        marginBottom: spacing.sm,
     },
     rating: {
         display: 'flex',
-        gap: '0.25rem',
+        gap: spacing.xs,
     },
     commentText: {
-        margin: '0.5rem 0',
+        margin: `${spacing.sm} 0`,
     },
     commentImage: {
         width: '100%',
         maxWidth: '300px',
-        borderRadius: '4px',
-        marginTop: '0.5rem',
+        borderRadius: borderRadius.sm,
+        marginTop: spacing.sm,
     },
     commentDate: {
-        fontSize: '0.875rem',
-        color: '#666',
+        fontSize: fontSize.sm,
+        color: colors.textLight,
     },
 };
