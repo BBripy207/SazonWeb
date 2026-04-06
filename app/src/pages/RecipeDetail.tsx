@@ -10,6 +10,9 @@ import List from '../components/ui/List';
 import ListItem from '../components/ui/ListItem';
 import Section from '../components/ui/Section';
 import { colors, spacing, fontSize, fontWeight, borderRadius } from '../styles/theme';
+import { useEffect, useState } from 'react';
+import { useParams } from 'react-router-dom';
+import { supabase } from '../supabaseClient';
 
 const mockRecipe = {
     id: '1',
@@ -55,77 +58,122 @@ const mockComments = [
 ];
 
 export default function RecipeDetail() {
+    const { id } = useParams<{ id: string }>(); // Get ID from URL /receta/:id
+    const [recipe, setRecipe] = useState<any>(null);
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        if (id) fetchFullRecipe();
+    }, [id]);
+
+    async function fetchFullRecipe() {
+        setLoading(true);
+        // This is the "Mega-Join"
+        const { data, error } = await supabase
+            .from('recipes')
+            .select(`
+                *,
+                categories ( name ),
+                ingredients ( ingredient_name, quantity, unit ),
+                preparation_steps ( step_number, description ),
+                comments ( 
+                    id, 
+                    comment, 
+                    rating, 
+                    created_at, 
+                    users ( username, profile_image ) 
+                )
+            `)
+            .eq('id', id)
+            .single(); // Tells Supabase we expect exactly one object, not an array
+
+        if (error) {
+            console.error("Error fetching recipe:", error);
+        } else {
+            setRecipe(data);
+        }
+        setLoading(false);
+    }
+
+    if (loading) return <Box style={{ padding: '2rem' }}>Cargando receta...</Box>;
+    if (!recipe) return <Box style={{ padding: '2rem' }}>Receta no encontrada.</Box>;
+
     return (
         <Box style={styles.page}>
+            {/* HERO SECTION */}
             <Box style={styles.hero}>
-                <Image src={mockRecipe.image} alt={mockRecipe.title} style={styles.heroImage} />
+                <Image src={recipe.image_url} alt={recipe.title} style={styles.heroImage} />
                 <Box style={styles.heroOverlay}>
-                    <Heading level={1} style={styles.title}>{mockRecipe.title}</Heading>
+                    <Heading level={1} style={styles.title}>{recipe.title}</Heading>
                     <Box style={styles.meta}>
                         <Text as="span" style={styles.metaItem}>
                             <Clock size={18} />
-                            {mockRecipe.time} min
+                            {recipe.preparation_time} min
                         </Text>
                         <Text as="span" style={styles.metaItem}>
                             <Users size={18} />
-                            {mockRecipe.servings} porciones
+                            {recipe.servings} porciones
                         </Text>
-                        <Text as="span" style={styles.badge}>{mockRecipe.difficulty}</Text>
+                        <Text as="span" style={styles.badge}>{recipe.difficulty}</Text>
                     </Box>
                 </Box>
             </Box>
 
             <Box style={styles.content}>
                 <Box style={styles.main}>
+                    {/* INGREDIENTS */}
                     <Section style={styles.section}>
                         <Box style={styles.sectionHeader}>
                             <Heading level={2} style={styles.sectionTitle}>Ingredientes</Heading>
-                            <Button onClick={() => { }}>
+                            <Button onClick={() => { /* Logic for favorites later */ }}>
                                 <BookMarked size={20} />
                                 Guardar
                             </Button>
                         </Box>
                         <List style={styles.ingredientsList}>
-                            {mockRecipe.ingredients.map((ing, i) => (
+                            {recipe.ingredients?.map((ing: any, i: number) => (
                                 <ListItem key={i} style={styles.ingredient}>
-                                    <Text as="span">{ing.name}</Text>
+                                    <Text as="span">{ing.ingredient_name}</Text>
                                     <Text as="span" style={styles.amount}>
-                                        {ing.amount} {ing.unit}
+                                        {ing.quantity} {ing.unit}
                                     </Text>
                                 </ListItem>
                             ))}
                         </List>
                     </Section>
 
+                    {/* INSTRUCTIONS */}
                     <Section style={styles.section}>
                         <Heading level={2} style={styles.sectionTitle}>Instrucciones</Heading>
                         <List ordered style={styles.instructionsList}>
-                            {mockRecipe.instructions.map((step, i) => (
-                                <ListItem key={i} style={styles.instruction}>
-                                    {step}
-                                </ListItem>
+                            {recipe.preparation_steps
+                                ?.sort((a: any, b: any) => a.step_number - b.step_number)
+                                .map((step: any, i: number) => (
+                                    <ListItem key={i} style={styles.instruction}>
+                                        {step.description}
+                                    </ListItem>
                             ))}
                         </List>
                     </Section>
 
+                    {/* COMMENTS */}
                     <Section style={styles.section}>
-                        <Heading level={2} style={styles.sectionTitle}>Comentarios y Fotos</Heading>
+                        <Heading level={2} style={styles.sectionTitle}>Comentarios</Heading>
                         <Box style={styles.comments}>
-                            {mockComments.map((comment) => (
+                            {recipe.comments?.map((comment: any) => (
                                 <Box key={comment.id} style={styles.comment}>
                                     <Box style={styles.commentHeader}>
-                                        <Text as="strong">{comment.user}</Text>
+                                        <Text as="strong">{comment.users?.username}</Text>
                                         <Box style={styles.rating}>
                                             {[...Array(comment.rating)].map((_, i) => (
                                                 <Star key={i} size={16} fill="#ffc107" color="#ffc107" />
                                             ))}
                                         </Box>
                                     </Box>
-                                    <Text style={styles.commentText}>{comment.text}</Text>
-                                    {comment.image && (
-                                        <Image src={comment.image} alt="Foto del usuario" style={styles.commentImage} />
-                                    )}
-                                    <Text as="span" style={styles.commentDate}>{comment.date}</Text>
+                                    <Text style={styles.commentText}>{comment.comment}</Text>
+                                    <Text as="span" style={styles.commentDate}>
+                                        {new Date(comment.created_at).toLocaleDateString()}
+                                    </Text>
                                 </Box>
                             ))}
                         </Box>

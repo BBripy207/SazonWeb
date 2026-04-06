@@ -14,16 +14,30 @@ interface Props {
 export default function RecipeCard({ recipe }: Props) {
     return (
         <LinkComponent to={`/receta/${recipe.id}`} style={styles.card}>
-            <Image src={recipe.image} alt={recipe.title} style={styles.image} />
+            {/* 1. Use image_url from DB */}
+            <Image src={recipe.image_url} alt={recipe.title} style={styles.image} />
+            
             <Box style={styles.content}>
                 <Heading level={3} style={styles.title}>{recipe.title}</Heading>
+                
                 <Box style={styles.info}>
                     <Text as="span" style={styles.badge}>{recipe.difficulty}</Text>
+                    
                     <Text as="span" style={styles.time}>
                         <Clock size={16} />
-                        {recipe.time} min
+                        {/* 2. Use preparation_time from DB */}
+                        {recipe.preparation_time} min
                     </Text>
                 </Box>
+
+                {/* 3. Optional: Show the Category name if it exists */}
+                {recipe.categories && (
+                    <Text style={styles.categoryText}>
+                        {Array.isArray(recipe.categories) 
+                            ? recipe.categories[0]?.name 
+                            : recipe.categories.name}
+                    </Text>
+                )}
             </Box>
         </LinkComponent>
     );

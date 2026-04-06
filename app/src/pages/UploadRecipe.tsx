@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Upload } from 'lucide-react';
 import Container from '../components/layout/Container';
 import PageTitle from '../components/layout/PageTitle';
@@ -8,25 +8,103 @@ import Button from '../components/ui/Button';
 import Box from '../components/ui/Box';
 import Text from '../components/ui/Text';
 import { colors, spacing, fontSize, fontWeight, borderRadius } from '../styles/theme';
+import { supabase } from '../supabaseClient';
 
 export default function UploadRecipe() {
     const [title, setTitle] = useState('');
     const [time, setTime] = useState('');
     const [servings, setServings] = useState('');
     const [difficulty, setDifficulty] = useState('Fácil');
+    const [ingredients, setIngredients] = useState('');
+    const [instructions, setInstructions] = useState('');
+    const [categoryId, setCategoryId] = useState<number | string>('');
+    const [categories, setCategories] = useState<any[]>([]);
+    const [isSubmitting, setIsSubmitting] = useState(false);
 
-    const handleSubmit = (e: React.FormEvent) => {
+    // Fetch categories so the user can pick one
+    useEffect(() => {
+        async function getCategories() {
+            const { data } = await supabase.from('categories').select('id, name');
+            if (data) setCategories(data);
+        }
+        getCategories();
+    }, []);
+
+    const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        alert('Receta enviada con éxito');
+        setIsSubmitting(true);
+
+        try {
+            // 1. Insert the main Recipe
+            // Note: We're hardcoding user_id: 1 until we set up Auth!
+            const { data: recipeData, error: recipeError } = await supabase
+                .from('recipes')
+                .insert([{
+                    title,
+                    preparation_time: parseInt(time),
+                    servings: parseInt(servings),
+                    difficulty,
+                    category_id: categoryId,
+                    user_id: 1, 
+                    image_url: '' // Temporary placeholder
+                }])
+                .select()
+                .single();
+
+            if (recipeError) throw recipeError;
+
+            const recipeId = recipeData.id;
+
+            // 2. Prepare & Insert Ingredients
+            // We split the textarea by lines
+            const ingredientRows = ingredients.split('\n').filter(line => line.trim()).map(line => ({
+                recipe_id: recipeId,
+                ingredient_name: line.trim()
+            }));
+
+            const { error: ingError } = await supabase.from('ingredients').insert(ingredientRows);
+            if (ingError) throw ingError;
+
+            // 3. Prepare & Insert Instructions
+            const stepRows = instructions.split('\n').filter(line => line.trim()).map((line, index) => ({
+                recipe_id: recipeId,
+                step_number: index + 1,
+                description: line.trim()
+            }));
+
+            const { error: stepError } = await supabase.from('preparation_steps').insert(stepRows);
+            if (stepError) throw stepError;
+
+            alert('¡Receta publicada con éxito!');
+            // Reset form or redirect
+        } catch (error: any) {
+            alert('Error: ' + error.message);
+        } finally {
+            setIsSubmitting(false);
+        }
     };
 
     return (
         <Container maxWidth="800px">
             <PageTitle>Subir Receta</PageTitle>
             <Box as="form" onSubmit={handleSubmit} style={styles.form}>
+                
+                {/* Category Dropdown (New) */}
+                <Box style={styles.field}>
+                    <Text as="label" style={styles.label}>Categoría</Text>
+                    <select 
+                        required 
+                        value={categoryId} 
+                        onChange={(e) => setCategoryId(e.target.value)} 
+                        style={styles.input}
+                    >
+                        <option value="">Selecciona una categoría</option>
+                        {categories.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
+                    </select>
+                </Box>
+
                 <Input
                     label="Título de la receta"
-                    type="text"
                     value={title}
                     onChange={(e) => setTitle(e.target.value)}
                     required
@@ -47,33 +125,25 @@ export default function UploadRecipe() {
                         onChange={(e) => setServings(e.target.value)}
                         required
                     />
-                    <Box style={styles.field}>
-                        <Text as="label" style={styles.label}>Dificultad</Text>
-                        <select
-                            value={difficulty}
-                            onChange={(e) => setDifficulty(e.target.value)}
-                            style={styles.input}
-                        >
-                            <option>Fácil</option>
-                            <option>Media</option>
-                            <option>Difícil</option>
-                        </select>
-                    </Box>
                 </Grid>
 
                 <Box style={styles.field}>
-                    <Text as="label" style={styles.label}>Ingredientes</Text>
+                    <Text as="label" style={styles.label}>Ingredientes (uno por línea)</Text>
                     <textarea
-                        placeholder="Escribe cada ingrediente con su medida (ej: 250g harina)"
+                        value={ingredients}
+                        onChange={(e) => setIngredients(e.target.value)}
+                        placeholder="Ej: 500g Harina"
                         style={{ ...styles.input, minHeight: '100px' }}
                         required
                     />
                 </Box>
 
                 <Box style={styles.field}>
-                    <Text as="label" style={styles.label}>Instrucciones</Text>
+                    <Text as="label" style={styles.label}>Instrucciones (un paso por línea)</Text>
                     <textarea
-                        placeholder="Escribe cada paso de la receta"
+                        value={instructions}
+                        onChange={(e) => setInstructions(e.target.value)}
+                        placeholder="Ej: Mezclar los ingredientes secos"
                         style={{ ...styles.input, minHeight: '150px' }}
                         required
                     />
@@ -88,8 +158,8 @@ export default function UploadRecipe() {
                     </Box>
                 </Box>
 
-                <Button type="submit" variant="primary" size="lg">
-                    Publicar Receta
+                <Button type="submit" variant="primary" size="lg" disabled={isSubmitting}>
+                    {isSubmitting ? 'Publicando...' : 'Publicar Receta'}
                 </Button>
             </Box>
         </Container>

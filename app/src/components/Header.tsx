@@ -1,4 +1,4 @@
-import { ChefHat, BookMarked, User, Upload } from 'lucide-react';
+import { ChefHat, BookMarked, User as UserIcon, Upload } from 'lucide-react';
 import logo from '../assets/images/sasonweblogo.png';
 import SearchBar from './SearchBar';
 import Modal from './ui/Modal';
@@ -10,10 +10,72 @@ import Image from './ui/Image';
 import LinkComponent from './ui/Link';
 import useModal from '../hooks/useModal';
 import { colors, spacing, fontWeight } from '../styles/theme';
+import { createContext, useContext, useEffect, useState } from 'react';
+import { supabase } from '../supabaseClient';
+import { type User } from '@supabase/supabase-js';
+
+const AuthContext = createContext<{ user: User | null; loading: boolean }>({ user: null, loading: true });
+
+export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
+    const [user, setUser] = useState<User | null>(null);
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        // Check active sessions
+        supabase.auth.getSession().then(({ data: { session } }) => {
+            setUser(session?.user ?? null);
+            setLoading(false);
+        });
+
+        // Listen for changes (login/logout)
+        const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+            setUser(session?.user ?? null);
+        });
+
+        return () => subscription.unsubscribe();
+    }, []);
+
+    return (
+        <AuthContext.Provider value={{ user, loading }}>
+            {children}
+        </AuthContext.Provider>
+    );
+};
+
+export const useAuth = () => useContext(AuthContext);
+
+
 
 export default function Header() {
-    const { isOpen, toggle, close } = useModal();
+    const loginModal = useModal();
     const registerModal = useModal();
+    const { user } = useAuth();
+    
+    // Estados para los formularios
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+    const [loading, setLoading] = useState(false);
+
+    const handleLogin = async (e: React.FormEvent) => {
+        e.preventDefault();
+        setLoading(true);
+        const { error } = await supabase.auth.signInWithPassword({ email, password });
+        if (error) alert(error.message);
+        else loginModal.close();
+        setLoading(false);
+    };
+
+    const handleRegister = async (e: React.FormEvent) => {
+        e.preventDefault();
+        setLoading(true);
+        const { error } = await supabase.auth.signUp({ email, password });
+        if (error) alert(error.message);
+        else {
+            alert('¡Revisa tu correo de confirmación!');
+            registerModal.close();
+        }
+        setLoading(false);
+    };
 
     return (
         <Box as="header" style={styles.header}>
@@ -25,59 +87,57 @@ export default function Header() {
                     <Box style={styles.searchWrapper}>
                         <SearchBar />
                     </Box>
-                    <Button onClick={toggle} size="md" variant="primary">
-                        Iniciar sesión
-                    </Button>
+                    
+                    {user ? (
+                        <Button onClick={() => supabase.auth.signOut()} variant="secondary">
+                            Cerrar sesión
+                        </Button>
+                    ) : (
+                        <Button onClick={loginModal.toggle} variant="primary">
+                            Iniciar sesión
+                        </Button>
+                    )}
                 </Box>
             </Box>
+
+            {/* Navigation items */}
             <Box as="nav" style={styles.nav}>
                 <Box style={styles.container}>
                     <Box style={styles.navLinks}>
                         <LinkComponent to="/explorar" style={styles.navItem}>
-                            <ChefHat size={20} />
-                            <Text as="span">Recetas</Text>
+                            <ChefHat size={20} /> <Text as="span">Recetas</Text>
                         </LinkComponent>
                         <LinkComponent to="/mi-recetario" style={styles.navItem}>
-                            <BookMarked size={20} />
-                            <Text as="span">Mi Recetario</Text>
+                            <BookMarked size={20} /> <Text as="span">Mi Recetario</Text>
                         </LinkComponent>
                         <LinkComponent to="/subir-receta" style={styles.navItem}>
-                            <Upload size={20} />
-                            <Text as="span">Subir Receta</Text>
+                            <Upload size={20} /> <Text as="span">Subir Receta</Text>
                         </LinkComponent>
                         <LinkComponent to="/contacto" style={styles.navItem}>
-                            <User size={20} />
-                            <Text as="span">Contacto</Text>
+                            <UserIcon size={20} /> <Text as="span">Contacto</Text>
                         </LinkComponent>
                     </Box>
                 </Box>
             </Box>
 
-            <Modal isOpen={isOpen} onClose={close} title="Iniciar sesión">
-                <Box as="form" style={styles.form}>
-                    <Input type="email" placeholder="Correo electrónico" required />
-                    <Input type="password" placeholder="Contraseña" required />
-                    <Button type="submit" variant="primary" size="lg">
-                        Entrar
-                    </Button>
+            {/* LOG-IN MODAL */}
+            <Modal isOpen={loginModal.isOpen} onClose={loginModal.close} title="Iniciar sesión">
+                <Box as="form" onSubmit={handleLogin} style={styles.form}>
+                    <Input type="email" placeholder="Correo" value={email} onChange={e => setEmail(e.target.value)} required />
+                    <Input type="password" placeholder="Contraseña" value={password} onChange={e => setPassword(e.target.value)} required />
+                    <Button type="submit" disabled={loading}>{loading ? 'Cargando...' : 'Entrar'}</Button>
                     <Text style={styles.text}>
-                        ¿No tienes cuenta? <Box as="a" href="#" onClick={(e) => { e?.preventDefault(); close(); registerModal.open(); }} style={styles.link}>Regístrate</Box>
+                        ¿No tienes cuenta? <span onClick={() => { loginModal.close(); registerModal.toggle(); }} style={styles.link}>Regístrate</span>
                     </Text>
                 </Box>
             </Modal>
 
+            {/* SIGN-UP MODAL */}
             <Modal isOpen={registerModal.isOpen} onClose={registerModal.close} title="Crear cuenta">
-                <Box as="form" style={styles.form}>
-                    <Input type="text" placeholder="Nombre completo" required />
-                    <Input type="email" placeholder="Correo electrónico" required />
-                    <Input type="password" placeholder="Contraseña" required />
-                    <Input type="password" placeholder="Confirmar contraseña" required />
-                    <Button type="submit" variant="primary" size="lg">
-                        Registrarse
-                    </Button>
-                    <Text style={styles.text}>
-                        ¿Ya tienes cuenta? <Box as="a" href="#" onClick={(e) => { e?.preventDefault(); registerModal.close(); toggle(); }} style={styles.link}>Inicia sesión</Box>
-                    </Text>
+                <Box as="form" onSubmit={handleRegister} style={styles.form}>
+                    <Input type="email" placeholder="Correo" value={email} onChange={e => setEmail(e.target.value)} required />
+                    <Input type="password" placeholder="Contraseña" value={password} onChange={e => setPassword(e.target.value)} required />
+                    <Button type="submit" disabled={loading}>{loading ? 'Creando cuenta...' : 'Registrarse'}</Button>
                 </Box>
             </Modal>
         </Box>

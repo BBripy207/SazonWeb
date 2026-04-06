@@ -12,6 +12,9 @@ import enchiladas from '../assets/images/enchiladas_suizas_.png';
 import costillas from '../assets/images/costillas bbq.png';
 import pizza from '../assets/images/pizza italiana.png';
 import { colors, spacing, fontSize, fontWeight, borderRadius } from '../styles/theme';
+import { useEffect, useState } from 'react';
+import { supabase } from '../supabaseClient';
+import type { Recipe } from '../types';
 
 const categories = [
     { name: 'Postres', icon: Heart },
@@ -67,6 +70,29 @@ const mockRecipes = [
 ];
 
 export default function Home() {
+    const [recipes, setRecipes] = useState<Recipe[]>([]);
+    const [dbCategories, setDbCategories] = useState<any[]>([]);
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        fetchHomeData();
+    }, []);
+
+    async function fetchHomeData() {
+        setLoading(true);
+        
+        // Fetch Categories and Recipes in parallel (similar to Task.WhenAll in .NET)
+        const [catRes, recRes] = await Promise.all([
+            supabase.from('categories').select('*'),
+            supabase.from('recipes').select('*, categories(name)').limit(4)
+        ]);
+
+        if (!catRes.error) setDbCategories(catRes.data);
+        if (!recRes.error) setRecipes(recRes.data as Recipe[]);
+        
+        setLoading(false);
+    }
+
     return (
         <Container>
             <Section style={styles.hero}>
@@ -78,9 +104,9 @@ export default function Home() {
             <Section style={styles.section}>
                 <Heading level={2} style={styles.sectionTitle}>Categorías</Heading>
                 <Grid columns="categories" gap={spacing.md}>
-                    {categories.map((cat) => (
-                        <Box key={cat.name} style={styles.category}>
-                            <cat.icon size={32} />
+                    {dbCategories.map((cat) => (
+                        <Box key={cat.id} style={styles.category}>
+                            <span style={{ fontSize: '2rem' }}>{cat.icon}</span>
                             <Text as="span">{cat.name}</Text>
                         </Box>
                     ))}
@@ -88,12 +114,16 @@ export default function Home() {
             </Section>
 
             <Section style={styles.section}>
-                <Heading level={2} style={styles.sectionTitle}>Vistos Recientemente</Heading>
-                <Grid columns="recipes" gap={spacing.lg}>
-                    {mockRecipes.map((recipe) => (
-                        <RecipeCard key={recipe.id} recipe={recipe} />
-                    ))}
-                </Grid>
+                <Heading level={2} style={styles.sectionTitle}>Novedades en Sazón</Heading>
+                {loading ? (
+                    <p>Cargando lo mejor para ti...</p>
+                ) : (
+                    <Grid columns="recipes" gap={spacing.lg}>
+                        {recipes.map((recipe) => (
+                            <RecipeCard key={recipe.id} recipe={recipe} />
+                        ))}
+                    </Grid>
+                )}
             </Section>
         </Container>
     );

@@ -1,14 +1,13 @@
 export interface Recipe {
-    id: string;
+    id: string | number;
     title: string;
-    image: string;
-    time: number;
+    image_url: string;        
+    preparation_time: number; 
     difficulty: 'Fácil' | 'Media' | 'Difícil';
-    category: string;
-    ingredients: Ingredient[];
-    instructions: string[];
-    servings: number;
+    category_id?: number;
+    categories?: { name: string } | { name: string }[]; 
 }
+
 
 export interface Ingredient {
     name: string;
