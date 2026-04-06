@@ -1,4 +1,4 @@
-import { Clock, Users, BookMarked, Star } from 'lucide-react';
+import { Clock, Users, BookMarked, Star, Trash2 } from 'lucide-react';
 import logo from '../assets/images/sasonweblogo.png';
 import mostachon from '../assets/images/mostachon.png';
 import Button from '../components/ui/Button';
@@ -13,58 +13,22 @@ import { colors, spacing, fontSize, fontWeight, borderRadius } from '../styles/t
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { supabase } from '../supabaseClient';
-
-const mockRecipe = {
-    id: '1',
-    title: 'Mostachones',
-    image: mostachon,
-    time: 30,
-    difficulty: 'Fácil',
-    category: 'Postres',
-    servings: 12,
-    ingredients: [
-        { name: 'Harina', amount: 500, unit: 'g' },
-        { name: 'Azúcar', amount: 200, unit: 'g' },
-        { name: 'Manteca vegetal', amount: 250, unit: 'g' },
-        { name: 'Huevos', amount: 2, unit: 'pzas' },
-        { name: 'Polvo para hornear', amount: 10, unit: 'g' },
-    ],
-    instructions: [
-        'Precalienta el horno a 180°C',
-        'Mezcla la manteca con el azúcar hasta obtener una crema',
-        'Agrega los huevos uno por uno',
-        'Incorpora la harina cernida con el polvo para hornear',
-        'Forma bolitas y aplana ligeramente',
-        'Hornea por 15-20 minutos hasta dorar',
-    ],
-};
-
-const mockComments = [
-    {
-        id: '1',
-        user: 'María González',
-        text: 'Quedó delicioso, toda mi familia lo amó',
-        rating: 5,
-        date: '2026-01-15',
-        image: logo,
-    },
-    {
-        id: '2',
-        user: 'Carlos Pérez',
-        text: 'Muy fácil de seguir, las medidas son exactas',
-        rating: 5,
-        date: '2026-01-20',
-    },
-];
+import { useAuth } from '../Context/AuthContext';
 
 export default function RecipeDetail() {
     const { id } = useParams<{ id: string }>(); // Get ID from URL /receta/:id
+    const { user } = useAuth(); 
     const [recipe, setRecipe] = useState<any>(null);
     const [loading, setLoading] = useState(true);
+    const [isFavorited, setIsFavorited] = useState(false);
+    const [favLoading, setFavLoading] = useState(false);
 
     useEffect(() => {
-        if (id) fetchFullRecipe();
-    }, [id]);
+        if (id) {
+            fetchFullRecipe();
+            if (user) checkIsFavorited();
+        }
+    }, [id, user]);
 
     async function fetchFullRecipe() {
         setLoading(true);
@@ -93,6 +57,53 @@ export default function RecipeDetail() {
             setRecipe(data);
         }
         setLoading(false);
+    }
+
+   async function checkIsFavorited() {
+        if (!user || !id) return;
+        
+        // Use .maybeSingle() to avoid the "PGRST116" error when no record exists
+        const { data, error } = await supabase
+            .from('favorites')
+            .select('id')
+            .eq('user_id', user.id)
+            .eq('recipe_id', id)
+            .maybeSingle(); 
+        
+        if (error) {
+            console.error("Error checking favorite status:", error.message);
+            return;
+        }
+
+        // If data exists, it means the recipe IS already favorited
+        setIsFavorited(!!data);
+    }
+
+    async function toggleFavorite() {
+        if (!user) {
+            alert("Debes iniciar sesión para guardar recetas");
+            return;
+        }
+
+        setFavLoading(true);
+        if (isFavorited) {
+            // REMOVE from favorites
+            const { error } = await supabase
+                .from('favorites')
+                .delete()
+                .eq('user_id', user.id)
+                .eq('recipe_id', id);
+            
+            if (!error) setIsFavorited(false);
+        } else {
+            // ADD to favorites
+            const { error } = await supabase
+                .from('favorites')
+                .insert([{ user_id: user.id, recipe_id: id }]);
+            
+            if (!error) setIsFavorited(true);
+        }
+        setFavLoading(false);
     }
 
     if (loading) return <Box style={{ padding: '2rem' }}>Cargando receta...</Box>;
@@ -125,10 +136,15 @@ export default function RecipeDetail() {
                     <Section style={styles.section}>
                         <Box style={styles.sectionHeader}>
                             <Heading level={2} style={styles.sectionTitle}>Ingredientes</Heading>
-                            <Button onClick={() => { /* Logic for favorites later */ }}>
-                                <BookMarked size={20} />
-                                Guardar
-                            </Button>
+                                {/* DYNAMIC BUTTON */}
+                                <Button 
+                                    onClick={toggleFavorite} 
+                                    variant={isFavorited ? "secondary" : "primary"}
+                                    disabled={favLoading}
+                                >
+                                    {isFavorited ? <Trash2 size={20} /> : <BookMarked size={20} />}
+                                    {isFavorited ? "Quitar de favoritos" : "Guardar"}
+                                </Button>
                         </Box>
                         <List style={styles.ingredientsList}>
                             {recipe.ingredients?.map((ing: any, i: number) => (

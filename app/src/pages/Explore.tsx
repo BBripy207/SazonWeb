@@ -12,7 +12,7 @@ import costillas from '../assets/images/costillas bbq.png';
 import pizza from '../assets/images/pizza italiana.png';
 import { colors, spacing, fontSize, fontWeight } from '../styles/theme';
 import { supabase } from '../supabaseClient';
-import type { Recipe } from '../types'; // Use your shared interface!
+import type { Recipe } from '../types';
 
 const mockRecipes = [
     {

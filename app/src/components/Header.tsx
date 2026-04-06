@@ -12,67 +12,66 @@ import useModal from '../hooks/useModal';
 import { colors, spacing, fontWeight } from '../styles/theme';
 import { createContext, useContext, useEffect, useState } from 'react';
 import { supabase } from '../supabaseClient';
-import { type User } from '@supabase/supabase-js';
-
-const AuthContext = createContext<{ user: User | null; loading: boolean }>({ user: null, loading: true });
-
-export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
-    const [user, setUser] = useState<User | null>(null);
-    const [loading, setLoading] = useState(true);
-
-    useEffect(() => {
-        // Check active sessions
-        supabase.auth.getSession().then(({ data: { session } }) => {
-            setUser(session?.user ?? null);
-            setLoading(false);
-        });
-
-        // Listen for changes (login/logout)
-        const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
-            setUser(session?.user ?? null);
-        });
-
-        return () => subscription.unsubscribe();
-    }, []);
-
-    return (
-        <AuthContext.Provider value={{ user, loading }}>
-            {children}
-        </AuthContext.Provider>
-    );
-};
-
-export const useAuth = () => useContext(AuthContext);
-
-
+import type { MyUser } from '../types';
+import { useAuth } from '../Context/AuthContext'; 
 
 export default function Header() {
     const loginModal = useModal();
     const registerModal = useModal();
-    const { user } = useAuth();
+    const { user, login, logout } = useAuth();
     
-    // Estados para los formularios
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [username, setUsername] = useState('');
     const [loading, setLoading] = useState(false);
 
+    // MANUAL LOGIN (School project style)
     const handleLogin = async (e: React.FormEvent) => {
         e.preventDefault();
         setLoading(true);
-        const { error } = await supabase.auth.signInWithPassword({ email, password });
-        if (error) alert(error.message);
-        else loginModal.close();
+        
+        const { data, error } = await supabase
+            .from('users')
+            .select('*')
+            .eq('email', email)
+            .eq('password_hash', password)
+            .single();
+
+        if (error || !data) {
+            alert('Correo o contraseña incorrectos');
+        } else {
+            login(data); // This updates the global state
+            setEmail(''); // Clear form
+            setPassword(''); // Clear form
+            loginModal.close();
+        }
         setLoading(false);
     };
 
+    // MANUAL REGISTER
     const handleRegister = async (e: React.FormEvent) => {
         e.preventDefault();
         setLoading(true);
-        const { error } = await supabase.auth.signUp({ email, password });
-        if (error) alert(error.message);
-        else {
-            alert('¡Revisa tu correo de confirmación!');
+        
+        const { data, error } = await supabase
+            .from('users')
+            .insert([{ 
+                email, 
+                password_hash: password, 
+                username: username
+            }])
+            .select()
+            .single();
+
+        if (error) {
+            alert('Error al registrar: ' + error.message);
+        } else {
+            alert('¡Cuenta creada! Ahora puedes iniciar sesión.');
+            setEmail('');
+            setPassword('');
+            setUsername('');
             registerModal.close();
+            loginModal.open();
         }
         setLoading(false);
     };
@@ -89,13 +88,12 @@ export default function Header() {
                     </Box>
                     
                     {user ? (
-                        <Button onClick={() => supabase.auth.signOut()} variant="secondary">
-                            Cerrar sesión
-                        </Button>
+                        <Box style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                            <Text>Hola, {user.username}</Text>
+                            <Button onClick={logout} variant="secondary">Salir</Button>
+                        </Box>
                     ) : (
-                        <Button onClick={loginModal.toggle} variant="primary">
-                            Iniciar sesión
-                        </Button>
+                        <Button onClick={loginModal.toggle} variant="primary">Iniciar sesión</Button>
                     )}
                 </Box>
             </Box>
@@ -136,6 +134,7 @@ export default function Header() {
             <Modal isOpen={registerModal.isOpen} onClose={registerModal.close} title="Crear cuenta">
                 <Box as="form" onSubmit={handleRegister} style={styles.form}>
                     <Input type="email" placeholder="Correo" value={email} onChange={e => setEmail(e.target.value)} required />
+                    <Input type="text" placeholder="Nombre de usuario" value={username} onChange={e => setUsername(e.target.value)} required />
                     <Input type="password" placeholder="Contraseña" value={password} onChange={e => setPassword(e.target.value)} required />
                     <Button type="submit" disabled={loading}>{loading ? 'Creando cuenta...' : 'Registrarse'}</Button>
                 </Box>

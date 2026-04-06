@@ -7,6 +7,7 @@ import RecipeDetail from './pages/RecipeDetail';
 import MyRecipes from './pages/MyRecipes';
 import UploadRecipe from './pages/UploadRecipe';
 import Contact from './pages/Contact';
+import { AuthProvider } from './Context/AuthContext';
 
 function App() {
   return (

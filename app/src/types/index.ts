@@ -8,6 +8,11 @@ export interface Recipe {
     categories?: { name: string } | { name: string }[]; 
 }
 
+export interface MyUser {
+    id: number;
+    username: string;
+    email: string;
+}
 
 export interface Ingredient {
     name: string;

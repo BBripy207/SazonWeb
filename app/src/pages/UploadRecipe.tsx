@@ -9,12 +9,15 @@ import Box from '../components/ui/Box';
 import Text from '../components/ui/Text';
 import { colors, spacing, fontSize, fontWeight, borderRadius } from '../styles/theme';
 import { supabase } from '../supabaseClient';
+import { useAuth } from '../Context/AuthContext'; 
 
 export default function UploadRecipe() {
+    const { user } = useAuth();
     const [title, setTitle] = useState('');
     const [time, setTime] = useState('');
     const [servings, setServings] = useState('');
     const [difficulty, setDifficulty] = useState('Fácil');
+    const [imageUrl, setImageUrl] = useState(''); 
     const [ingredients, setIngredients] = useState('');
     const [instructions, setInstructions] = useState('');
     const [categoryId, setCategoryId] = useState<number | string>('');
@@ -32,6 +35,13 @@ export default function UploadRecipe() {
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
+
+        // Prevent upload if not logged in
+        if (!user) {
+            alert('Debes iniciar sesión para publicar una receta');
+            return;
+        }
+
         setIsSubmitting(true);
 
         try {
@@ -45,8 +55,8 @@ export default function UploadRecipe() {
                     servings: parseInt(servings),
                     difficulty,
                     category_id: categoryId,
-                    user_id: 1, 
-                    image_url: '' // Temporary placeholder
+                    user_id: user.id,
+                    image_url: imageUrl || ''
                 }])
                 .select()
                 .single();
@@ -76,7 +86,13 @@ export default function UploadRecipe() {
             if (stepError) throw stepError;
 
             alert('¡Receta publicada con éxito!');
-            // Reset form or redirect
+
+            setTitle('');
+            setTime('');
+            setServings('');
+            setIngredients('');
+            setInstructions('');
+            setCategoryId('');
         } catch (error: any) {
             alert('Error: ' + error.message);
         } finally {
@@ -149,6 +165,7 @@ export default function UploadRecipe() {
                     />
                 </Box>
 
+                {/*
                 <Box style={styles.field}>
                     <Text as="label" style={styles.label}>Imagen</Text>
                     <Box style={styles.upload}>
@@ -156,6 +173,29 @@ export default function UploadRecipe() {
                         <Text as="span">Arrastra una imagen o haz clic para subir</Text>
                         <input type="file" accept="image/*" style={styles.fileInput} />
                     </Box>
+                </Box>
+                */}
+
+                <Input
+                    label="URL de la Imagen"
+                    type="url"
+                    placeholder=""
+                    value={imageUrl}
+                    onChange={(e) => setImageUrl(e.target.value)}
+                />
+
+                <Box style={styles.field}>
+                    <Text as="label" style={styles.label}>Dificultad</Text>
+                    <select 
+                        value={difficulty} 
+                        onChange={(e) => setDifficulty(e.target.value)} 
+                        style={styles.input}
+                    >
+                        <option value="Fácil">Fácil</option>
+                        <option value="Medio">Medio</option>
+                        <option value="Difícil">Difícil</option>
+                        <option value="Experto">Experto</option>
+                    </select>
                 </Box>
 
                 <Button type="submit" variant="primary" size="lg" disabled={isSubmitting}>

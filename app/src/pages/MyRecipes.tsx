@@ -13,58 +13,25 @@ import { colors, spacing, fontSize, fontWeight } from '../styles/theme';
 import { supabase } from '../supabaseClient';
 import { useEffect, useState } from 'react';
 import type { Recipe } from '../types'; 
-
-const mockSaved = [
-    {
-        id: '1',
-        title: 'Mostachones',
-        image: mostachon,
-        time: 30,
-        difficulty: 'Fácil' as const,
-        category: 'Postres',
-        ingredients: [],
-        instructions: [],
-        servings: 12,
-    },
-    {
-        id: '4',
-        title: 'Pizza Italiana',
-        image: pizza,
-        time: 60,
-        difficulty: 'Media' as const,
-        category: 'Internacional',
-        ingredients: [],
-        instructions: [],
-        servings: 4,
-    },
-];
-
-const mockRecent = [
-    {
-        id: '3',
-        title: 'Costillas BBQ',
-        image: costillas,
-        time: 120,
-        difficulty: 'Difícil' as const,
-        category: 'Comida Casera',
-        ingredients: [],
-        instructions: [],
-        servings: 6,
-    },
-];
+import { useAuth } from '../Context/AuthContext';
 
 export default function MyRecipes() {
+    const { user } = useAuth();
     const [savedRecipes, setSavedRecipes] = useState<Recipe[]>([]);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        fetchSavedRecipes();
-    }, []);
+        if (user) {
+            fetchSavedRecipes();
+        } else {
+            setLoading(false);
+        }
+    }, [user]); // 3. Re-run if user logs in while on this page
 
     async function fetchSavedRecipes() {
+        if (!user) return;
         setLoading(true);
         
-        // 2. Query the 'favorites' table and JOIN the 'recipes' and 'categories'
         const { data, error } = await supabase
             .from('favorites')
             .select(`
@@ -77,16 +44,34 @@ export default function MyRecipes() {
                     categories ( name )
                 )
             `)
-            // .eq('user_id', currentUserId) // You'll add Auth logic later!
+            .eq('user_id', user.id); // 4. Filter by current user ID
 
         if (error) {
             console.error('Error fetching favorites:', error.message);
         } else if (data) {
-            // extract nested recipe objects from the response
-            const recipes = data.map((f: any) => f.recipes) as Recipe[];
+            // Filter out any nulls in case a favorited recipe was deleted
+            const recipes = data
+                .map((f: any) => f.recipes)
+                .filter(Boolean) as Recipe[];
             setSavedRecipes(recipes);
         }
         setLoading(false);
+    }
+
+    // 5. Show message if not logged in
+    if (!user) {
+        return (
+            <Container>
+                <PageTitle>Mi Recetario</PageTitle>
+                <Section style={{ textAlign: 'center', padding: '3rem 0' }}>
+                    <Heart size={48} color={colors.primary} style={{ marginBottom: spacing.md }} />
+                    <Heading level={2}>Inicia sesión para ver tus favoritos</Heading>
+                    <p style={{ color: colors.textLight }}>
+                        Guarda las recetas que más te gusten para tenerlas siempre a mano.
+                    </p>
+                </Section>
+            </Container>
+        );
     }
 
     return (
