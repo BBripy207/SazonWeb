@@ -23,3 +23,6 @@ dist-ssr
 *.sln
 *.sw?
 .env
+
+#Archivo de producción
+dist.zip
