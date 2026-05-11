@@ -11,6 +11,7 @@ import LinkComponent from './ui/Link';
 import useModal from '../hooks/useModal';
 import { colors, spacing, fontWeight } from '../styles/theme';
 import { createContext, useContext, useEffect, useState } from 'react';
+import { useLocation } from 'react-router-dom';
 import { supabase } from '../supabaseClient';
 import type { MyUser } from '../types';
 import { useAuth } from '../Context/AuthContext';
@@ -21,6 +22,12 @@ export default function Header() {
     const registerModal = useModal();
     const { user, login, logout } = useAuth();
     const { showToast } = useToast();
+    const location = useLocation();
+
+    const navLink = (path: string): React.CSSProperties => ({
+        ...styles.navItem,
+        ...(location.pathname.startsWith(path) ? styles.navItemActive : {}),
+    });
 
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
@@ -104,16 +111,16 @@ export default function Header() {
             <Box as="nav" style={styles.nav}>
                 <Box style={styles.container}>
                     <Box style={styles.navLinks}>
-                        <LinkComponent to="/explorar" style={styles.navItem}>
+                        <LinkComponent to="/explorar" style={navLink('/explorar')}>
                             <ChefHat size={20} /> <Text as="span">Recetas</Text>
                         </LinkComponent>
-                        <LinkComponent to="/mi-recetario" style={styles.navItem}>
+                        <LinkComponent to="/mi-recetario" style={navLink('/mi-recetario')}>
                             <BookMarked size={20} /> <Text as="span">Mi Recetario</Text>
                         </LinkComponent>
-                        <LinkComponent to="/subir-receta" style={styles.navItem}>
+                        <LinkComponent to="/subir-receta" style={navLink('/subir-receta')}>
                             <Upload size={20} /> <Text as="span">Subir Receta</Text>
                         </LinkComponent>
-                        <LinkComponent to="/contacto" style={styles.navItem}>
+                        <LinkComponent to="/contacto" style={navLink('/contacto')}>
                             <UserIcon size={20} /> <Text as="span">Contacto</Text>
                         </LinkComponent>
                     </Box>
@@ -196,6 +203,10 @@ const styles: Record<string, React.CSSProperties> = {
         fontWeight: fontWeight.semibold,
         borderBottom: '3px solid transparent',
         transition: 'all 0.3s',
+    },
+    navItemActive: {
+        color: colors.primary,
+        borderBottom: `3px solid ${colors.primary}`,
     },
     form: {
         display: 'flex',

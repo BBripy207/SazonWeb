@@ -63,8 +63,7 @@ const styles: Record<string, React.CSSProperties> = {
     image: {
         width: '100%',
         height: '200px',
-        objectFit: 'contain',
-        backgroundColor: colors.backgroundLight,
+        objectFit: 'cover',
     },
     content: {
         padding: spacing.md,

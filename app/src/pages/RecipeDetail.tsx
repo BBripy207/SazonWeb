@@ -1,4 +1,4 @@
-import { Clock, Users, BookMarked, Star, Trash2 } from 'lucide-react';
+import { Clock, Users, BookMarked, BookmarkX, Star } from 'lucide-react';
 import logo from '../assets/images/sasonweblogo.png';
 import mostachon from '../assets/images/mostachon.png';
 import Button from '../components/ui/Button';
@@ -144,7 +144,7 @@ export default function RecipeDetail() {
                                 variant={isFavorited ? "secondary" : "primary"}
                                 disabled={favLoading}
                             >
-                                {isFavorited ? <Trash2 size={20} /> : <BookMarked size={20} />}
+                                {isFavorited ? <BookmarkX size={20} /> : <BookMarked size={20} />}
                                 {isFavorited ? "Quitar de favoritos" : "Guardar"}
                             </Button>
                         </Box>
@@ -214,8 +214,7 @@ const styles: Record<string, React.CSSProperties> = {
     heroImage: {
         width: '100%',
         height: '100%',
-        objectFit: 'contain',
-        backgroundColor: colors.backgroundLight,
+        objectFit: 'cover',
     },
     heroOverlay: {
         position: 'absolute',
