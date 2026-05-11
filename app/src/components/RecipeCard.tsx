@@ -16,13 +16,13 @@ export default function RecipeCard({ recipe }: Props) {
         <LinkComponent to={`/receta/${recipe.id}`} style={styles.card}>
             {/* 1. Use image_url from DB */}
             <Image src={recipe.image_url} alt={recipe.title} style={styles.image} />
-            
+
             <Box style={styles.content}>
                 <Heading level={3} style={styles.title}>{recipe.title}</Heading>
-                
+
                 <Box style={styles.info}>
                     <Text as="span" style={styles.badge}>{recipe.difficulty}</Text>
-                    
+
                     <Text as="span" style={styles.time}>
                         <Clock size={16} />
                         {/* 2. Use preparation_time from DB */}
@@ -33,10 +33,15 @@ export default function RecipeCard({ recipe }: Props) {
                 {/* 3. Optional: Show the Category name if it exists */}
                 {recipe.categories && (
                     <Text style={styles.categoryText}>
-                        {Array.isArray(recipe.categories) 
-                            ? recipe.categories[0]?.name 
+                        {Array.isArray(recipe.categories)
+                            ? recipe.categories[0]?.name
                             : recipe.categories.name}
                     </Text>
+                )}
+
+                {/* 4. Show who uploaded the recipe */}
+                {recipe.users?.username && (
+                    <Text style={styles.author}>por {recipe.users.username}</Text>
                 )}
             </Box>
         </LinkComponent>
@@ -88,5 +93,16 @@ const styles: Record<string, React.CSSProperties> = {
         gap: spacing.xs,
         fontSize: fontSize.sm,
         color: colors.textLight,
+    },
+    categoryText: {
+        marginTop: spacing.xs,
+        fontSize: fontSize.sm,
+        color: colors.textLight,
+    },
+    author: {
+        marginTop: spacing.xs,
+        fontSize: fontSize.sm,
+        color: colors.textLight,
+        fontStyle: 'italic',
     },
 };

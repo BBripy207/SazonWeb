@@ -1,11 +1,12 @@
 export interface Recipe {
     id: string | number;
     title: string;
-    image_url: string;        
-    preparation_time: number; 
+    image_url: string;
+    preparation_time: number;
     difficulty: 'Fácil' | 'Media' | 'Difícil';
     category_id?: number;
-    categories?: { name: string } | { name: string }[]; 
+    categories?: { name: string } | { name: string }[];
+    users?: { username: string };
 }
 
 export interface MyUser {

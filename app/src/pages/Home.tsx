@@ -215,7 +215,7 @@ export default function Home() {
 
         const [catRes, recRes] = await Promise.all([
             supabase.from('categories').select('*'),
-            supabase.from('recipes').select('*, categories(name)')
+            supabase.from('recipes').select('*, categories(name), users(username)')
         ]);
 
         if (!catRes.error) setDbCategories(catRes.data);

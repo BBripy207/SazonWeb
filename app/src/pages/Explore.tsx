@@ -66,7 +66,7 @@ export default function Explore() {
     const [recipes, setRecipes] = useState<Recipe[]>([]);
     const [loading, setLoading] = useState(true);
     const [difficulty, setDifficulty] = useState('');
-    
+
     // Get the search query from the URL (e.g., ?q=tacos)
     const query = searchParams.get('q') || '';
 
@@ -78,7 +78,7 @@ export default function Explore() {
 
     async function fetchRecipes() {
         setLoading(true);
-        
+
         let supabaseQuery = supabase
             .from('recipes')
             .select(`
@@ -87,7 +87,8 @@ export default function Explore() {
                 image_url,
                 preparation_time,
                 difficulty,
-                categories ( name )
+                categories ( name ),
+                users ( username )
             `);
 
         // 1. Filter by Search Query (title contains string - Case Insensitive)
@@ -116,7 +117,7 @@ export default function Explore() {
                 <Heading level={1} style={styles.title}>
                     {query ? `Resultados para "${query}"` : 'Explorar Recetas'}
                 </Heading>
-                
+
                 <Box style={styles.filters}>
                     <Filter size={20} />
                     <select
