@@ -14,10 +14,12 @@ import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { supabase } from '../supabaseClient';
 import { useAuth } from '../Context/AuthContext';
+import { useToast } from '../Context/ToastContext';
 
 export default function RecipeDetail() {
-    const { id } = useParams<{ id: string }>(); // Get ID from URL /receta/:id
-    const { user } = useAuth(); 
+    const { id } = useParams<{ id: string }>();
+    const { user } = useAuth();
+    const { showToast } = useToast();
     const [recipe, setRecipe] = useState<any>(null);
     const [loading, setLoading] = useState(true);
     const [isFavorited, setIsFavorited] = useState(false);
@@ -59,17 +61,17 @@ export default function RecipeDetail() {
         setLoading(false);
     }
 
-   async function checkIsFavorited() {
+    async function checkIsFavorited() {
         if (!user || !id) return;
-        
+
         // Use .maybeSingle() to avoid the "PGRST116" error when no record exists
         const { data, error } = await supabase
             .from('favorites')
             .select('id')
             .eq('user_id', user.id)
             .eq('recipe_id', id)
-            .maybeSingle(); 
-        
+            .maybeSingle();
+
         if (error) {
             console.error("Error checking favorite status:", error.message);
             return;
@@ -81,7 +83,7 @@ export default function RecipeDetail() {
 
     async function toggleFavorite() {
         if (!user) {
-            alert("Debes iniciar sesión para guardar recetas");
+            showToast("Debes iniciar sesión para guardar recetas", "info");
             return;
         }
 
@@ -93,14 +95,14 @@ export default function RecipeDetail() {
                 .delete()
                 .eq('user_id', user.id)
                 .eq('recipe_id', id);
-            
+
             if (!error) setIsFavorited(false);
         } else {
             // ADD to favorites
             const { error } = await supabase
                 .from('favorites')
                 .insert([{ user_id: user.id, recipe_id: id }]);
-            
+
             if (!error) setIsFavorited(true);
         }
         setFavLoading(false);
@@ -136,15 +138,15 @@ export default function RecipeDetail() {
                     <Section style={styles.section}>
                         <Box style={styles.sectionHeader}>
                             <Heading level={2} style={styles.sectionTitle}>Ingredientes</Heading>
-                                {/* DYNAMIC BUTTON */}
-                                <Button 
-                                    onClick={toggleFavorite} 
-                                    variant={isFavorited ? "secondary" : "primary"}
-                                    disabled={favLoading}
-                                >
-                                    {isFavorited ? <Trash2 size={20} /> : <BookMarked size={20} />}
-                                    {isFavorited ? "Quitar de favoritos" : "Guardar"}
-                                </Button>
+                            {/* DYNAMIC BUTTON */}
+                            <Button
+                                onClick={toggleFavorite}
+                                variant={isFavorited ? "secondary" : "primary"}
+                                disabled={favLoading}
+                            >
+                                {isFavorited ? <Trash2 size={20} /> : <BookMarked size={20} />}
+                                {isFavorited ? "Quitar de favoritos" : "Guardar"}
+                            </Button>
                         </Box>
                         <List style={styles.ingredientsList}>
                             {recipe.ingredients?.map((ing: any, i: number) => (
@@ -168,7 +170,7 @@ export default function RecipeDetail() {
                                     <ListItem key={i} style={styles.instruction}>
                                         {step.description}
                                     </ListItem>
-                            ))}
+                                ))}
                         </List>
                     </Section>
 

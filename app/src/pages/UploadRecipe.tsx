@@ -9,15 +9,17 @@ import Box from '../components/ui/Box';
 import Text from '../components/ui/Text';
 import { colors, spacing, fontSize, fontWeight, borderRadius } from '../styles/theme';
 import { supabase } from '../supabaseClient';
-import { useAuth } from '../Context/AuthContext'; 
+import { useAuth } from '../Context/AuthContext';
+import { useToast } from '../Context/ToastContext';
 
 export default function UploadRecipe() {
     const { user } = useAuth();
+    const { showToast } = useToast();
     const [title, setTitle] = useState('');
     const [time, setTime] = useState('');
     const [servings, setServings] = useState('');
     const [difficulty, setDifficulty] = useState('Fácil');
-    const [imageUrl, setImageUrl] = useState(''); 
+    const [imageUrl, setImageUrl] = useState('');
     const [ingredients, setIngredients] = useState('');
     const [instructions, setInstructions] = useState('');
     const [categoryId, setCategoryId] = useState<number | string>('');
@@ -38,7 +40,7 @@ export default function UploadRecipe() {
 
         // Prevent upload if not logged in
         if (!user) {
-            alert('Debes iniciar sesión para publicar una receta');
+            showToast('Debes iniciar sesión para publicar una receta', 'error');
             return;
         }
 
@@ -85,7 +87,7 @@ export default function UploadRecipe() {
             const { error: stepError } = await supabase.from('preparation_steps').insert(stepRows);
             if (stepError) throw stepError;
 
-            alert('¡Receta publicada con éxito!');
+            showToast('¡Receta publicada con éxito!', 'success');
 
             setTitle('');
             setTime('');
@@ -94,7 +96,7 @@ export default function UploadRecipe() {
             setInstructions('');
             setCategoryId('');
         } catch (error: any) {
-            alert('Error: ' + error.message);
+            showToast('Error: ' + error.message, 'error');
         } finally {
             setIsSubmitting(false);
         }
@@ -104,14 +106,14 @@ export default function UploadRecipe() {
         <Container maxWidth="800px">
             <PageTitle>Subir Receta</PageTitle>
             <Box as="form" onSubmit={handleSubmit} style={styles.form}>
-                
+
                 {/* Category Dropdown (New) */}
                 <Box style={styles.field}>
                     <Text as="label" style={styles.label}>Categoría</Text>
-                    <select 
-                        required 
-                        value={categoryId} 
-                        onChange={(e) => setCategoryId(e.target.value)} 
+                    <select
+                        required
+                        value={categoryId}
+                        onChange={(e) => setCategoryId(e.target.value)}
                         style={styles.input}
                     >
                         <option value="">Selecciona una categoría</option>
@@ -186,9 +188,9 @@ export default function UploadRecipe() {
 
                 <Box style={styles.field}>
                     <Text as="label" style={styles.label}>Dificultad</Text>
-                    <select 
-                        value={difficulty} 
-                        onChange={(e) => setDifficulty(e.target.value)} 
+                    <select
+                        value={difficulty}
+                        onChange={(e) => setDifficulty(e.target.value)}
                         style={styles.input}
                     >
                         <option value="Fácil">Fácil</option>

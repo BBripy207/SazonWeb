@@ -17,6 +17,7 @@ import {
   borderRadius,
 } from "../styles/theme";
 import emailjs from "@emailjs/browser";
+import { useToast } from "../Context/ToastContext";
 
 const contacts = [
   { name: "Leo Arguello", phone: "627 465 7700" },
@@ -29,8 +30,7 @@ export default function Contact() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [message, setMessage] = useState("");
-
-
+  const { showToast } = useToast();
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -41,12 +41,12 @@ export default function Contact() {
         { name, email, message },
         "yh2fe1X07tVSe9zwe", // de EmailJS dashboard
       );
-      alert("Mensaje enviado correctamente");
+      showToast("Mensaje enviado correctamente", "success");
       setName("");
       setEmail("");
       setMessage("");
     } catch (error) {
-      alert("Error al enviar. Intenta de nuevo.");
+      showToast("Error al enviar. Intenta de nuevo.", "error");
     }
   };
 

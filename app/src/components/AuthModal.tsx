@@ -7,12 +7,14 @@ import Heading from './ui/Heading';
 import Text from './ui/Text';
 import { X } from 'lucide-react';
 import { colors, spacing, borderRadius } from '../styles/theme';
+import { useToast } from '../Context/ToastContext';
 
 export default function AuthModal({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) {
     const [isSignUp, setIsSignUp] = useState(false);
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [loading, setLoading] = useState(false);
+    const { showToast } = useToast();
 
     if (!isOpen) return null;
 
@@ -20,14 +22,14 @@ export default function AuthModal({ isOpen, onClose }: { isOpen: boolean; onClos
         e.preventDefault();
         setLoading(true);
 
-        const { error } = isSignUp 
+        const { error } = isSignUp
             ? await supabase.auth.signUp({ email, password })
             : await supabase.auth.signInWithPassword({ email, password });
 
         if (error) {
-            alert(error.message);
+            showToast(error.message, 'error');
         } else {
-            alert(isSignUp ? '¡Revisa tu correo para confirmar!' : '¡Bienvenido!');
+            showToast(isSignUp ? '¡Revisa tu correo para confirmar!' : '¡Bienvenido!', 'success');
             onClose();
         }
         setLoading(false);
@@ -38,11 +40,11 @@ export default function AuthModal({ isOpen, onClose }: { isOpen: boolean; onClos
             <Box style={styles.modal}>
                 <button onClick={onClose} style={styles.closeBtn}><X /></button>
                 <Heading level={2}>{isSignUp ? 'Crear Cuenta' : 'Iniciar Sesión'}</Heading>
-                
+
                 <form onSubmit={handleAuth} style={{ display: 'flex', flexDirection: 'column', gap: spacing.md }}>
                     <Input label="Email" type="email" value={email} onChange={(e) => setEmail(e.target.value)} required />
                     <Input label="Contraseña" type="password" value={password} onChange={(e) => setPassword(e.target.value)} required />
-                    
+
                     <Button type="submit" disabled={loading}>
                         {loading ? 'Cargando...' : isSignUp ? 'Registrarse' : 'Entrar'}
                     </Button>

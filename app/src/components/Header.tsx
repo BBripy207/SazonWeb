@@ -13,13 +13,15 @@ import { colors, spacing, fontWeight } from '../styles/theme';
 import { createContext, useContext, useEffect, useState } from 'react';
 import { supabase } from '../supabaseClient';
 import type { MyUser } from '../types';
-import { useAuth } from '../Context/AuthContext'; 
+import { useAuth } from '../Context/AuthContext';
+import { useToast } from '../Context/ToastContext';
 
 export default function Header() {
     const loginModal = useModal();
     const registerModal = useModal();
     const { user, login, logout } = useAuth();
-    
+    const { showToast } = useToast();
+
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [username, setUsername] = useState('');
@@ -29,7 +31,7 @@ export default function Header() {
     const handleLogin = async (e: React.FormEvent) => {
         e.preventDefault();
         setLoading(true);
-        
+
         const { data, error } = await supabase
             .from('users')
             .select('*')
@@ -38,7 +40,7 @@ export default function Header() {
             .single();
 
         if (error || !data) {
-            alert('Correo o contraseña incorrectos');
+            showToast('Correo o contraseña incorrectos', 'error');
         } else {
             login(data); // This updates the global state
             setEmail(''); // Clear form
@@ -52,21 +54,21 @@ export default function Header() {
     const handleRegister = async (e: React.FormEvent) => {
         e.preventDefault();
         setLoading(true);
-        
+
         const { data, error } = await supabase
             .from('users')
-            .insert([{ 
-                email, 
-                password_hash: password, 
+            .insert([{
+                email,
+                password_hash: password,
                 username: username
             }])
             .select()
             .single();
 
         if (error) {
-            alert('Error al registrar: ' + error.message);
+            showToast('Error al registrar: ' + error.message, 'error');
         } else {
-            alert('¡Cuenta creada! Ahora puedes iniciar sesión.');
+            showToast('¡Cuenta creada! Ahora puedes iniciar sesión.', 'success');
             setEmail('');
             setPassword('');
             setUsername('');
@@ -86,7 +88,7 @@ export default function Header() {
                     <Box style={styles.searchWrapper}>
                         <SearchBar />
                     </Box>
-                    
+
                     {user ? (
                         <Box style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
                             <Text>Hola, {user.username}</Text>
